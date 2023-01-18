@@ -1,5 +1,7 @@
-#ifndef PHRASE_H
-#define PHRASE_H
+// Copyright 2023 Leo James Peckham
+
+#ifndef SETNOTATION_SRC_PHRASE_H_
+#define SETNOTATION_SRC_PHRASE_H_
 
 #include <string>
 #include <list>
@@ -8,37 +10,38 @@
 #include <vector>
 
 class Phrase {
-public:
-	enum Token;
+ public:
+    enum Token;
 
-	struct PhraseType {
-		std::vector<Token> tokens;
-		std::list<void*> literals;
-	};
+    struct PhraseType {
+        std::vector<Token> tokens;
+        std::list<void*> literals;
+    };
 
-	struct TypedPtr {
-		void* ptr;
-		Phrase::Token type;
-	};
+    struct TypedPtr {
+        void* ptr;
+        Phrase::Token type;
+    };
 
-	std::vector<void*> data;
+    std::vector<void*> data;
 
-	Phrase(const std::string& expression);
-	Phrase(const char* expression);
-	Phrase(std::list<Token> token_list);
-	Phrase(const Phrase& other);
+    // TODO(padri): make these actually do something
+    // Phrase(const std::string& expression);
+    explicit Phrase(const char* expression);
+    // Phrase(std::list<Token> token_list);
+    // Phrase(const Phrase& other);
 
-	~Phrase();
-	
-private:
-	PhraseType parse(const std::string& str);
-	TypedPtr evaluate(std::vector<Phrase::Token> token_list, std::list<void*>& literal_list, bool terminating = false);
+    ~Phrase();
 
-	int t = 0; // used for int&pos
+ private:
+    PhraseType parse(const std::string& str);
+    TypedPtr evaluate(std::vector<Phrase::Token> token_list, bool terminating = false);
 
-	std::string expression;
-	PhraseType phrase;
-	std::string result;
+    int t = 0;  // used for int&pos
+
+    std::string expression;
+    PhraseType phrase;
+    std::string result;
 };
 
 
