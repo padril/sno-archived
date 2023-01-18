@@ -31,10 +31,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\TODO.txt" />
-    <Text Include="src\LICENSE.txt" />
+    <Text Include="TODO.txt" />
+    <Text Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\README.md" />
+    <None Include="README.md" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="CPPLINT.cfg" />
   </ItemGroup>
 </Project>
