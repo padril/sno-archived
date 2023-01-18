@@ -30,9 +30,4 @@
 *.exe
 *.out
 *.app
-/x64/Debug
-/.vs/SetNotation
-/SetNotation.vcxproj.user
-/SetNotation.vcxproj.filters
-/SetNotation.vcxproj
-/SetNotation.sln
+/.vs
