@@ -1,4 +1,4 @@
-#ifndef SET_H
+#ifndef SETNOTATION_SET_H_
 #define SET_H
 
 #include <iostream>
@@ -93,6 +93,8 @@ private:
 
 	// returns a custom struct with "Set elements, bool truncated"
 	// allowing us to easily prune our set for printing or other
+	// TODO: change from 'around_zero' to centered, and give an option to center at a specific point
+	//		 this will be useful when overloading operators
 	static auto truncate(std::deque<T> values, size_t new_size = MAX_SIZE, bool around_zero = false) {
 		struct returnValues {
 			std::deque<T> elements;
