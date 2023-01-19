@@ -14,8 +14,8 @@ enum Phrase::Token {
 
     POSITIVE,
 
-    DYADS,  // admin token, used to determine monadic/dyadic usage of operators in `parse`
-
+    DYADS,  // admin token, used to determine monadic/dyadic
+            // usage of operators in `parse`
     ADD,
 };
 
@@ -42,22 +42,27 @@ auto parse_literal_or_variable(const std::string& str, int* pos) {
     };
 
     auto is_digit = [](char c) { return '0' <= c && c <= '9'; };
-    auto is_alpha = [](char c) { return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'); };
+    auto is_alpha = [](char c) {
+      return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
+    };
 
     while (str[*pos] == ' ') (*pos)++;  // skip over spaces
 
     // TODO(padri): if it starts with "", dont return a variable type
-    //         should probably also give more return types than "literal", (int, real, etc)
     int start = *pos;
     size_t size = str.size();
     while (*pos < size && is_alpha(str[*pos])) (*pos)++;
     if (*pos > start) {  // there was a letter, its a variable
-        while (start < size && (is_alpha(str[*pos]) || is_digit(str[*pos]))) (*pos)++;
+        while (start < size && (is_alpha(str[*pos]) || is_digit(str[*pos]))) {
+            (*pos)++;
+        }
         // have to do pos-- here to put pos back to the end of the literal
-        return returnType{ Phrase::LITERAL_VAR, new std::string(str.substr(start, (*pos)-- - start)) };
+        return returnType{Phrase::LITERAL_VAR,
+                          new std::string(str.substr(start, (*pos)-- - start))};
     } else {  // no letter,
         while (is_digit(str[*pos]) || str[*pos] == '.') (*pos)++;
-        return returnType{ Phrase::LITERAL_INT, new int(stoi(str.substr(start, (*pos)-- - start))) };
+        return returnType{Phrase::LITERAL_INT,
+                          new int(stoi(str.substr(start, (*pos)-- - start)))};
     }
 }
 
@@ -112,10 +117,12 @@ Tptr OPERATOR_POSITIVE(Tptr arg1) {
 Tptr OPERATOR_ADD(Tptr arg1, Tptr arg2) {
     using enum Token;
     // hacky way to get dynamic type deduction w/ ternary operator
-    auto arg1val =    arg1.type == LITERAL_INT ? *reinterpret_cast<int*>(arg1.ptr) : (
-                    /* else */ 0);
-    auto arg2val =    arg2.type == LITERAL_INT ? *reinterpret_cast<int*>(arg2.ptr) : (
-                    /* else */ 0);
+    auto arg1val =
+        arg1.type == LITERAL_INT ? *reinterpret_cast<int*>(arg1.ptr)
+        /* else */ : 0;
+    auto arg2val =
+        arg2.type == LITERAL_INT ? *reinterpret_cast<int*>(arg2.ptr)
+        /* else */ : 0;
     auto retval = arg1val + arg2val;
     Token rettype;
     if (std::is_same<decltype(retval), int>::value) {
@@ -159,7 +166,8 @@ Tptr Phrase::evaluate(std::vector<Token> token_list, bool terminating) {
             literal_list.pop_front();
             break;
         }
-        if (used.size() == 0 || left.ptr != used.back().ptr) {  // if left changed, add to used
+        // if left changed, add to used
+        if (used.size() == 0 || left.ptr != used.back().ptr) {
             used.push_back(left);
         }
         if (terminating) break;

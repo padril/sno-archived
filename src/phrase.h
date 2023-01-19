@@ -35,7 +35,8 @@ class Phrase {
 
  private:
     PhraseType parse(const std::string& str);
-    TypedPtr evaluate(std::vector<Phrase::Token> token_list, bool terminating = false);
+  TypedPtr evaluate(std::vector<Phrase::Token> token_list,
+                    bool terminating = false);
 
     int t = 0;  // used for int&pos
 

@@ -19,13 +19,18 @@ class Set {
     static inline const bool NULL_RULE(T x);
 
     // statically initialized
-    Set() : rule(NULL_RULE), left(0), right(std::is_same<T, int>::value ? -1 : -DEFAULT_GRAIN) {}
-    Set(std::initializer_list<T> values) : elements(truncate(values).elements) {}
+    Set()
+        : rule(NULL_RULE),
+          left(0),
+          right(std::is_same<T, int>::value ? -1 : -DEFAULT_GRAIN) {}
+    Set(std::initializer_list<T> values)
+        : elements(truncate(values).elements) {}
     explicit Set(std::deque<T> values) : elements(truncate(values).elements) {}
     ~Set() {}
 
     // dynamically initialized
-    explicit Set(bool (*mask)(T x), int attempts = MAX_ATTEMPTS, float grain = DEFAULT_GRAIN) {
+    explicit Set(bool (*mask)(T x), int attempts = MAX_ATTEMPTS,
+                 float grain = DEFAULT_GRAIN) {
         if (std::is_same<T, int>::value) grain = 1;
 
         rule = mask;
@@ -80,7 +85,8 @@ class Set {
         for (T i : truncated.elements) {
             os << i << ", ";
         }
-        if (truncated.elements.size() > 0) os << "\b\b";  // making use of \b to remove the final ", "
+        // making use of \b to remove the final ", "
+        if (truncated.elements.size() > 0) os << "\b\b";
         if (truncated.on_right) os << "...";
         os << "} ";
         return os;
@@ -95,9 +101,11 @@ class Set {
 
     // returns a custom struct with "Set elements, bool truncated"
     // allowing us to easily prune our set for printing or other
-    // TODO(padri): change from 'around_zero' to centered, and give an option to center at a specific point
-    //         this will be useful when overloading operators
-    static auto truncate(std::deque<T> values, size_t new_size = MAX_SIZE, bool around_zero = false) {
+    // TODO(padri): change from 'around_zero' to centered,
+    //              and give an option to center at a specific point
+    //              this will be useful when overloading operators
+    static auto truncate(std::deque<T> values, size_t new_size = MAX_SIZE,
+                         bool around_zero = false) {
         struct returnValues {
             std::deque<T> elements;
             bool on_left;
@@ -123,12 +131,17 @@ class Set {
                 int found = 1;
                 std::deque<T> new_values = { min };
 
-                while (found < new_size) {  // search radially away from the min_i to find values to print
+                // search radially away from the min_i to find values to print
+                while (found < new_size) {
                     if (l < 0) {
-                        for (int i = r; i < found; i++) new_values.push_back(values[i]);
+                        for (int i = r; i < found; i++) {
+                            new_values.push_back(values[i])
+                        }
                         return returnValues { new_values, true, false };
                     } else if (r > end_i) {
-                        for (int i = l; i >= 0; i--) new_values.push_back(values[i]);
+                        for (int i = l; i >= 0; i--) {
+                            new_values.push_back(values[i])
+                        }
                         return returnValues { new_values, false, true };
                     } else if ((min - values[l]) < (values[r] - min)) {
                         new_values.push_front(values[l]);
