@@ -9,21 +9,16 @@
 #include <tuple>
 #include <vector>
 
+#include "src/tokens.h"
+
 class Phrase {
  public:
-    enum Token;
-
     struct PhraseType {
         std::vector<Token> tokens;
-        std::list<void*> literals;
+        std::list<Literal> literals;
     };
 
-    struct TypedPtr {
-        void* ptr;
-        Phrase::Token type;
-    };
-
-    std::vector<void*> data;
+    std::vector<Literal> data;
 
     // TODO(padri): make these actually do something
     // Phrase(const std::string& expression);
@@ -35,9 +30,9 @@ class Phrase {
 
  private:
     PhraseType parse(const std::string& str);
-  TypedPtr evaluate(std::vector<Phrase::Token> token_list,
+    Literal evaluate(std::vector<Token> token_list,
                     bool terminating = false);
-
+    
     int t = 0;  // used for int&pos
 
     std::string expression;

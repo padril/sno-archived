@@ -135,12 +135,12 @@ class Set {
                 while (found < new_size) {
                     if (l < 0) {
                         for (int i = r; i < found; i++) {
-                            new_values.push_back(values[i])
+                        new_values.push_back(values[i]);
                         }
                         return returnValues { new_values, true, false };
                     } else if (r > end_i) {
                         for (int i = l; i >= 0; i--) {
-                            new_values.push_back(values[i])
+                        new_values.push_back(values[i]);
                         }
                         return returnValues { new_values, false, true };
                     } else if ((min - values[l]) < (values[r] - min)) {

@@ -15,6 +15,14 @@ TODO:
 			really easy to do for function support
 	 o functions
 	 o sequences
+ o speaking of functions
+	 ? variables
+	 ? syntax
+	 o derivatives
+		 ? faster to approximate or calculate?
+	 o integrals
+		 ? almost certainly faster to calculate, but
+		   maybe indefinite integrals could be different
  o operations
 	 o Set union, intersection, difference
 		 o might need multiple rules, so behaviour would need to be added for that
@@ -40,6 +48,20 @@ example phrases:
 	~ X @ `R : X < 1000000	LIKELY until it searches 1000001, FALSE
 							if i properly program expressions, maybe will show false immediately
 
+Literals
+ o ` used for mathematical constants and stuff, `inf, `R, `C, `pi, `e
+   to be honest idk if this one should be a literal, definitely do it last
+ o "" used for strings
+ x 123 ... numeric
+ ? . reals
+ o 123i imaginary
+	 o 123i + 456 complex (procresses faster)
+ o abc123 variable
+ o (12, 34] intervals
+ o [12 34 56] higher dimensonal vectors
+
+ o SET??? idk if they should be literals
+
 UNUSED: &
 //	TODO: TOKENS		//
 //	END_PHRASE,			// \n (normally)
@@ -57,7 +79,6 @@ UNUSED: &
 //	ETC,				// ... tries to use proportionality to
 //						//	deduce rule, always polynomial
 //	PRINT,				// $, use variants for graphing i think
-//	ACCESS,				// ` used for mathematical constants and stuff, `inf, `R, `C, `pi, `e
 //	SUB,				// _ used for sequences
 //						//	maybe for classes or something later
 //	THERE_EXISTS,		// ?
