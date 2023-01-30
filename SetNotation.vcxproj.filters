@@ -46,7 +46,6 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="CPPLINT.cfg" />
-    <None Include="src\cpp.hint" />
     <None Include="src\operator_generator.py" />
   </ItemGroup>
 </Project>

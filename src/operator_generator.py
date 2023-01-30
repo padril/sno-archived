@@ -29,15 +29,15 @@ import re
 
 
 includes = [
-    "<iostream>",
-    "\"src/tokens.h\""
+    '<iostream>'
+    '"src/tokens.h"'
     ]
 
 keytypes = {
-    "numeric": ["int", "float"],
-    "null": ["nulltype"],
-    "string": ["std::string"],
-    "default": ["auto"],
+    'numeric': ['int', 'float'],
+    'null': ['nulltype'],
+    'string': ['std::string'],
+    'default': ['auto'],
     }
 
 
@@ -45,32 +45,37 @@ def generate_function(types: List[str], args: List[str],
                       operations: List[str]) -> List[str]:
     """Creates line by line list of a c++ operator() function
     """
-    arity = len(types)
-    if len(args) == 1:
-        args = ["_"] + args
+    type_args = f'{types[0]} {args[0]}, {types[1]} {args[1]}'
 
-    type_args = f"{types[0]} {args[0]}, {types[1]} {args[1]}"
-
-    ret = [f"\tauto operator()({type_args}) {{"]
+    ret = [f'\tauto operator()({type_args}) {{']
     for operation in operations:
-        ret.append("\t\t" + operation)
-    ret.append("\t}")
+        ret.append('\t\t' + operation)
+    ret.append('\t}')
 
     return ret
 
 
 def format_packages(file: TextIO) -> List[List[str]]:
+    """Splits packages into their header and functions
+    """
     packages = []
     current_package = []
     whitespace = 0
+
+    match_blank = re.compile(r'\s*')
+    match_multi_line_start = re.compile(r'.+:\n')
+    match_indented = re.compile(r'\s+')
+
     for line in file:
-        if re.fullmatch('\\s*', line):
+        if match_blank.fullmatch(line):
             continue
-        elif re.fullmatch('.+:\n', line):
+        elif match_multi_line_start.fullmatch(line):
+            # keep track of current whitespace so we know when indenting stops
             whitespace = len(line) - len(line.lstrip())
             current_package.append(line.strip())
-        elif re.match('\\s+', line):
+        elif match_indented.match(line):
             if len(line) - len(line.lstrip()) > whitespace != 0:
+                # if we haven't stopped indenting, just tack onto the end
                 current_package[-1] += line.strip()
             else:
                 current_package.append(line.strip())
@@ -79,28 +84,34 @@ def format_packages(file: TextIO) -> List[List[str]]:
             packages.append(current_package)
             current_package = [line]
     packages.append(current_package)
+    # first package is always empty, discard
     return packages[1:]
 
 
 def parse(file: TextIO) -> List[str]:
     formatted_packages = format_packages(file)
     parsed_packages = {}
+    split_type_args = re.compile(r'\s*[(),]\s*')
+    split_type_operations = re.compile(r'\s*:\s*')
+    split_types = re.compile(r'\s*,\s*')
+    split_newlines = re.compile(r'\n')
     for package in formatted_packages:
-        name, left, right = re.split("\\s*[(),]\\s*", package[0] + "(,")[:3]
+        # add '(,' to ensure theres always enough blanks to cut down with [:3]
+        name, left, right = split_type_args.split(package[0] + '(,')[:3]
         if right:
             args = [left, right]
         elif left:
-            args = [left]
+            args = ['', left]
         else:
-            args = []
+            args = ['', '']
         functions = []
 
         for func in package[1:]:
-            types, operations = re.split("\\s*:\\s*", func, 1)
-            types = re.split("\\s*,\\s*", types.strip())
+            types, operations = split_type_operations.split(func, 1)
+            types = split_types.split(types.strip())
             if len(types) == 1:
-                types = ["nulltype"] + types
-            operations = re.split("\n", operations)
+                types = ['nulltype'] + types
+            operations = split_newlines.split(operations)
             types_alias = [keytypes.get(types[0], [types[0]]),
                            keytypes.get(types[1], [types[1]])]
             types_pairs = [[i,j] for i in types_alias[0] for j in types_alias[1]]
@@ -113,30 +124,30 @@ def parse(file: TextIO) -> List[str]:
 
     lines = []
     for name, package in parsed_packages.items():
-        lines += [f"struct OPERATOR_{name.upper()}_PACKAGE {{",
-                  "\tauto operator()(auto, nulltype) { /* ERROR */ }"]
+        lines.append(f'struct OPERATOR_{name.upper()}_PACKAGE {{',
+                  '\tauto operator()(auto, nulltype) { /* ERROR */ }')
         lines += package
-        lines += ["};\n"]
+        lines.append('};\n')
 
     return lines
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     program_path, ifile_path, ofile_path = argv
-    header_path = re.sub('[\\\.]', '_', ofile_path + '_').upper()
+    header_path = re.sub(r'[\\\.]', '_', ofile_path + '_').upper()
     ifile = open(ifile_path, 'r')
     ofile = open(ofile_path, 'w')
 
-    ofile.write(f"#ifndef {header_path}\n#define {header_path}\n\n")
+    ofile.write(f'#ifndef {header_path}\n#define {header_path}\n\n')
 
     for include in includes:
-         ofile.write(f"#include {include}\n")
+         ofile.write(f'#include {include}\n')
     ofile.write('\n')
 
     for parsed_line in parse(ifile):
         ofile.write(parsed_line + '\n')
 
-    ofile.write(f"#endif  // {header_path}")
+    ofile.write(f'#endif  // {header_path}')
 
     ifile.close()
     ofile.close()

@@ -149,7 +149,6 @@
     <None Include=".gitignore" />
     <None Include="CPPLINT.cfg" />
     <None Include="README.md" />
-    <None Include="src\cpp.hint" />
     <None Include="src\operator_generator.py" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
