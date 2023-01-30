@@ -24,6 +24,9 @@
     <ClInclude Include="src\tokens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\operators.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -36,11 +39,14 @@
   <ItemGroup>
     <Text Include="TODO.txt" />
     <Text Include="LICENSE.txt" />
+    <Text Include="src\operators.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="CPPLINT.cfg" />
+    <None Include="src\cpp.hint" />
+    <None Include="src\operator_generator.py" />
   </ItemGroup>
 </Project>

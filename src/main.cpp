@@ -4,5 +4,5 @@
 #include "src/phrase.h"
 
 int main() {
-    Phrase p("14 + 6 + +100");
+    Phrase p("4.5 + 6");
 }

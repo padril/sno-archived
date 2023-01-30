@@ -3,23 +3,11 @@
 #include "src/phrase.h"
 #include "src/tokens.h"
 
-#define VALUE_OF(LITERAL)\
-    (\
-    (LITERAL##.index() == (size_t) LITERAL_INT) ?\
-        std::get<(size_t) LITERAL_INT>(LITERAL) : (\
-    (LITERAL##.index() == (size_t) LITERAL_REAL) ?\
-        std::get<(size_t) LITERAL_REAL>(LITERAL) : \
-        NULL )\
-    )
-
 Phrase::Phrase(const char* str) {
     expression = str;
     phrase = parse(expression);
-    int t = 0;
     Literal result = evaluate(phrase.tokens);
-    using enum Type;
-    auto p = VALUE_OF(result);
-    std::cout << p;
+    OPERATOR_PRINT(result);
 }
 
 Phrase::~Phrase() {}
@@ -32,7 +20,7 @@ Literal parse_literal(const std::string& str, int* pos) {
 
     while (str[*pos] == ' ') (*pos)++;  // skip over spaces
 
-    int start = *pos;
+    size_t start = *pos;
     size_t size = str.size();
 
     /* reference from TODO.txt until complete
@@ -41,7 +29,7 @@ Literal parse_literal(const std::string& str, int* pos) {
        to be honest idk if this one should be a literal, definitely do it last
      o "" used for strings
      x 123 ... numeric
-     ? . reals
+     x . reals
      o 123i imaginary
 	     o 123i + 456 complex (procresses faster)
      o abc123 variable
@@ -65,23 +53,24 @@ Literal parse_literal(const std::string& str, int* pos) {
         }
         // some slightly weird shifts by one here to remove quotes
         start++;
-        return Literal(std::string(str.substr(start), (*pos)-- - start - 1));
+        auto ret = Literal(str.substr(start, *pos - start).c_str());
+        return ret;
     } else if (is_alpha(str[*pos])) {
         // VARIABLE abc123
         while (start < size && (is_alpha(str[*pos]) || is_digit(str[*pos]))) {
             (*pos)++;
         }
-        return Literal(std::string(str.substr(start, (*pos)-- - start)));
     } else if (is_digit(str[*pos])) {
         // INTEGER or REAL 123 or 123.456
         while (is_digit(str[*pos])) (*pos)++;
         if (str[*pos] == '.') {
             // REAL 123.456
+            (*pos)++;
             while (is_digit(str[*pos])) (*pos)++;
-            return Literal(float(stof(str.substr(start, (*pos)-- - start))));
+            return Literal(stof(str.substr(start, (*pos) - start)));
         } else {
             // INTEGER 123
-            return Literal(int(stoi(str.substr(start, (*pos)-- - start))));
+            return Literal(stoi(str.substr(start, (*pos) - start)));
         }
     } else {
         // TODO(padril): handle error unknown character in literal
@@ -118,14 +107,6 @@ Phrase::PhraseType Phrase::parse(const std::string& str) {
     return PhraseType{ local_phrase, local_literals };
 }
 
-Literal OPERATOR_PLUS(Literal left, Literal right) {
-    using enum Type;
-    if (left.index() == (size_t) LITERAL_NULL) {
-        return +VALUE_OF(right);
-    }
-    return VALUE_OF(left) + VALUE_OF(right);
-}
-
 Literal Phrase::evaluate(std::vector<Token> token_list, bool terminating) {
     using enum Token;
     using enum Type;
@@ -155,5 +136,5 @@ Literal Phrase::evaluate(std::vector<Token> token_list, bool terminating) {
         }
     }
 
-    return VALUE_OF(left);
+    return left;
 }

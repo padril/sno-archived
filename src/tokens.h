@@ -3,7 +3,7 @@
 
 #include <string>
 #include <variant>
-#include "set.h"
+#include "src/set.h"
 
 typedef struct{} nulltype;
 typedef std::variant<nulltype, int, float, std::string> Literal;

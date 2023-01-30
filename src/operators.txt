@@ -1,0 +1,13 @@
+print (arg)
+    null: std::cout << "NULL\n";
+    default: std::cout << arg << '\n';
+
+plus (x)
+    numeric: return +x;
+plus (x, y)
+    numeric, numeric: return x + y;
+    string, string: return x + y;
+
+times (x, y)
+    numeric, numeric:
+        return x * y;
