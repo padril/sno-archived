@@ -1,6 +1,10 @@
 print (arg)
-    null: std::cout << "NULL\n";
-    default: std::cout << arg << '\n';
+    null:
+        std::cout << "NULL\n";
+        return arg;
+    default:
+        std::cout << arg << '\n';
+        return arg;
 
 plus (x)
     numeric: return +x;
@@ -9,5 +13,9 @@ plus (x, y)
     string, string: return x + y;
 
 times (x, y)
-    numeric, numeric:
-        return x * y;
+    numeric, numeric: return x * y;
+
+slash (x, y)
+    override int, int: return rational{x, y};
+    numeric, numeric: return x / y;
+    

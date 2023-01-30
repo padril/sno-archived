@@ -29,12 +29,12 @@ import re
 
 
 includes = [
-    '<iostream>'
-    '"src/tokens.h"'
+    '<iostream>',
+    '"src/tokens.h"',
     ]
 
 keytypes = {
-    'numeric': ['int', 'float'],
+    'numeric': ['int', 'rational', 'float'],
     'null': ['nulltype'],
     'string': ['std::string'],
     'default': ['auto'],
@@ -47,7 +47,7 @@ def generate_function(types: List[str], args: List[str],
     """
     type_args = f'{types[0]} {args[0]}, {types[1]} {args[1]}'
 
-    ret = [f'\tauto operator()({type_args}) {{']
+    ret = [f'\tLiteral operator()({type_args}) {{']
     for operation in operations:
         ret.append('\t\t' + operation)
     ret.append('\t}')
@@ -95,6 +95,7 @@ def parse(file: TextIO) -> List[str]:
     split_type_operations = re.compile(r'\s*:\s*')
     split_types = re.compile(r'\s*,\s*')
     split_newlines = re.compile(r'\n')
+    remove_override = re.compile(r'\s*override\s+')
     for package in formatted_packages:
         # add '(,' to ensure theres always enough blanks to cut down with [:3]
         name, left, right = split_type_args.split(package[0] + '(,')[:3]
@@ -106,16 +107,24 @@ def parse(file: TextIO) -> List[str]:
             args = ['', '']
         functions = []
 
+        override = []
         for func in package[1:]:
             types, operations = split_type_operations.split(func, 1)
             types = split_types.split(types.strip())
+            overridden = remove_override.sub('', types[0])
+            was_overridden = types[0] != overridden
+            types[0] = overridden
             if len(types) == 1:
                 types = ['nulltype'] + types
             operations = split_newlines.split(operations)
-            types_alias = [keytypes.get(types[0], [types[0]]),
+            type_alias = [keytypes.get(types[0], [types[0]]),
                            keytypes.get(types[1], [types[1]])]
-            types_pairs = [[i,j] for i in types_alias[0] for j in types_alias[1]]
-            for pair in types_pairs:
+            type_pairs = [[i,j] for i in type_alias[0] for j in type_alias[1]]
+            if not was_overridden:
+                type_pairs = [p for p in type_pairs if p not in override]
+            else:
+                override += type_pairs
+            for pair in type_pairs:
                 functions += generate_function(pair, args, operations)
 
         if not parsed_packages.get(name):
@@ -124,10 +133,16 @@ def parse(file: TextIO) -> List[str]:
 
     lines = []
     for name, package in parsed_packages.items():
-        lines.append(f'struct OPERATOR_{name.upper()}_PACKAGE {{',
-                  '\tauto operator()(auto, nulltype) { /* ERROR */ }')
+        name = name.upper()
+        lines += [f'struct OPERATOR_{name}_PACKAGE {{',
+                  '\tLiteral operator()(auto, auto) {',
+                  '\t\treturn nulltype();  // ERROR',
+                  '\t}']
         lines += package
         lines.append('};\n')
+        lines.append(f'Literal OPERATOR_{name}(Literal l, Literal r) {{')
+        lines.append(f'\treturn std::visit(OPERATOR_{name}_PACKAGE(), l, r);')
+        lines.append('}')
 
     return lines
 

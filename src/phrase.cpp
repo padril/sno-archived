@@ -2,12 +2,13 @@
 
 #include "src/phrase.h"
 #include "src/tokens.h"
+#include "src/operators.h"
 
 Phrase::Phrase(const char* str) {
     expression = str;
     phrase = parse(expression);
     Literal result = evaluate(phrase.tokens);
-    OPERATOR_PRINT(result);
+    OPERATOR_PRINT(nulltype(), result);
 }
 
 Phrase::~Phrase() {}
@@ -67,10 +68,11 @@ Literal parse_literal(const std::string& str, int* pos) {
             // REAL 123.456
             (*pos)++;
             while (is_digit(str[*pos])) (*pos)++;
-            return Literal(stof(str.substr(start, (*pos) - start)));
+            return Literal(stof(str.substr(start, (*pos)-- - start)));
+        // TODO: make rationals a literal?
         } else {
             // INTEGER 123
-            return Literal(stoi(str.substr(start, (*pos) - start)));
+            return Literal(stoi(str.substr(start, (*pos)-- - start)));
         }
     } else {
         // TODO(padril): handle error unknown character in literal
@@ -89,6 +91,8 @@ Phrase::PhraseType Phrase::parse(const std::string& str) {
         switch (str[pos]) {
             case ' ': continue;
             case '+': local_phrase.push_back(PLUS); break;
+            case '*': local_phrase.push_back(TIMES); break;
+            case '/': local_phrase.push_back(SLASH); break;
             case '(': local_phrase.push_back(BEGIN_PRIORITY); break;
             case ')': local_phrase.push_back(END_PRIORITY); break;
             case ':':
@@ -129,12 +133,30 @@ Literal Phrase::evaluate(std::vector<Token> token_list, bool terminating) {
                 pos++;
                 left = OPERATOR_PLUS(left, evaluate(token_list, true));
                 break;
+            case TIMES:
+                pos++;
+                left = OPERATOR_TIMES(left, evaluate(token_list, true));
+                break;
+            case SLASH:
+                pos++;
+                left = OPERATOR_SLASH(left, evaluate(token_list, true));
+                break;
             case LITERAL:
                 left = literal_list.front();
                 literal_list.pop_front();
-                break;
+                if (terminating) {
+                    goto end;
+                }
+                else {
+                    break;
+                }
         }
     }
-
+end:
+    if (std::holds_alternative<rational>(left)) {
+        if (std::get<rational>(left).denominator == 1) {
+            left = int(std::get<rational>(left));
+        }
+    }
     return left;
 }
