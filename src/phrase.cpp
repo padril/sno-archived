@@ -7,7 +7,7 @@
 Phrase::Phrase(const char* str) {
     expression = str;
     phrase = parse(expression);
-    Literal result = evaluate(phrase.tokens);
+    Literal result = evaluate(phrase);
     OPERATOR_PRINT(Null(), result);
 }
 
@@ -84,7 +84,7 @@ Phrase::PhraseType Phrase::parse(const std::string& str) {
     size_t size = str.size();
     using enum Token;
 
-    std::vector<Token> local_phrase;
+    std::list<Token> local_phrase;
     std::list<Literal> local_literals;
 
     for (int pos = 0; pos < str.size(); pos++) {
@@ -111,39 +111,41 @@ Phrase::PhraseType Phrase::parse(const std::string& str) {
     return PhraseType{ local_phrase, local_literals };
 }
 
-Literal Phrase::evaluate(std::vector<Token> token_list, bool terminating) {
+Literal Phrase::evaluate(PhraseType& local_phrase, bool terminating) {
     using enum Token;
     using enum Type;
 
     // this left thing is magic it works so much better than a stack approach
     Literal left = {Null()};
-    static std::list<Literal> literal_list = phrase.literals;
-    static int pos = 0;
+    std::list<Token>* tokens = &local_phrase.tokens;
+    std::list<Literal>* literals = &local_phrase.literals;
 
     // the pos++; before an evaluate call prevents infinite loops
-    for (; pos < token_list.size(); pos++) {
-        switch (token_list[pos]) {
+    while (tokens->size() > 0) {
+        switch (tokens->front()) {
             case BEGIN_PRIORITY:
-                pos++;
-                left = evaluate(token_list, false);
+                tokens->pop_front();
+                left = evaluate(local_phrase, false);
                 break;
             case END_PRIORITY:
+                tokens->pop_front();
                 return left;
             case PLUS:
-                pos++;
-                left = OPERATOR_PLUS(left, evaluate(token_list, true));
+                tokens->pop_front();
+                left = OPERATOR_PLUS(left, evaluate(local_phrase, true));
                 break;
             case TIMES:
-                pos++;
-                left = OPERATOR_TIMES(left, evaluate(token_list, true));
+                tokens->pop_front();
+                left = OPERATOR_TIMES(left, evaluate(local_phrase, true));
                 break;
             case SLASH:
-                pos++;
-                left = OPERATOR_SLASH(left, evaluate(token_list, true));
+                tokens->pop_front();
+                left = OPERATOR_SLASH(left, evaluate(local_phrase, true));
                 break;
             case LITERAL:
-                left = literal_list.front();
-                literal_list.pop_front();
+                tokens->pop_front();
+                left = literals->front();
+                literals->pop_front();
                 if (terminating) {
                     goto end;
                 }

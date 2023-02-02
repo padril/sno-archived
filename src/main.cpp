@@ -7,5 +7,5 @@ int main() {
     // TODO: bug because literal_list is static,
     // change literal_list into a passed by reference
     // pos held thing like token_list, or something?
-    //Phrase p1("3/2/4");
+    Phrase p1("3/2/4");
 }

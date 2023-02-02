@@ -15,7 +15,7 @@
 class Phrase {
  public:
     struct PhraseType {
-        std::vector<Token> tokens;
+        std::list<Token> tokens;
         std::list<Literal> literals;
     };
 
@@ -31,7 +31,7 @@ class Phrase {
 
  private:
     PhraseType parse(const std::string& str);
-    Literal evaluate(std::vector<Token> token_list,
+    Literal evaluate(PhraseType& local_phrase,
                     bool terminating = false);
     
     int t = 0;  // used for int&pos
