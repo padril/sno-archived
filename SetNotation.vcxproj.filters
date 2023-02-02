@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\set.h">
+    <ClInclude Include="src\types\set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\phrase.h">
@@ -24,7 +24,19 @@
     <ClInclude Include="src\tokens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\operators.h">
+    <ClInclude Include="src\operators\operators.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\types\rational.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\types\nulltype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\types\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\type_definitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,17 +47,22 @@
     <ClCompile Include="src\phrase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\types\rational.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TODO.txt" />
     <Text Include="LICENSE.txt" />
-    <Text Include="src\operators.txt" />
+    <Text Include="src\operators\operators.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="CPPLINT.cfg" />
-    <None Include="src\operator_generator.py" />
+    <None Include="src\operators\operator_generator.py" />
+    <None Include="src\types\README.md" />
+    <None Include="src\cpp.hint" />
   </ItemGroup>
 </Project>

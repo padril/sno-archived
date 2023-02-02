@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "src/tokens.h"
+#include "src/types/types.h"
 
 class Phrase {
  public:

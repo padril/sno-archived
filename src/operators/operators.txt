@@ -16,6 +16,6 @@ times (x, y)
     numeric, numeric: return x * y;
 
 slash (x, y)
-    override int, int: return rational{x, y};
+    override int, int: return Rational{x, y};
     numeric, numeric: return x / y;
     

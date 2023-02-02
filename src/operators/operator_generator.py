@@ -20,7 +20,7 @@ plus (x, y)
     string, string: return x + y;
 
 current command:
-py .\src\operator_generator.py "src\operators.txt" "src\operators.h"
+py .\src\operators\operator_generator.py "src\operators\operators.txt" "src\operators\operators.h"
 """
 
 from sys import argv
@@ -31,13 +31,19 @@ import re
 includes = [
     '<iostream>',
     '"src/tokens.h"',
+    '"src/types/types.h"',
+    '"src/type_definitions.h"'
     ]
 
 keytypes = {
-    'numeric': ['int', 'rational', 'float'],
-    'null': ['nulltype'],
+    'null': ['Null'],
+    'bool': ['TYPE_BOOL'],
+    'int': ['TYPE_INT'],
+    'real': ['TYPE_REAL'],
     'string': ['std::string'],
+
     'default': ['auto'],
+    'numeric': ['TYPE_INT', 'Rational', 'TYPE_REAL'],
     }
 
 
@@ -76,7 +82,7 @@ def format_packages(file: TextIO) -> List[List[str]]:
         elif match_indented.match(line):
             if len(line) - len(line.lstrip()) > whitespace != 0:
                 # if we haven't stopped indenting, just tack onto the end
-                current_package[-1] += line.strip()
+                current_package[-1] += line.strip() + '\n'
             else:
                 current_package.append(line.strip())
                 whitespace = 0
@@ -96,6 +102,7 @@ def parse(file: TextIO) -> List[str]:
     split_types = re.compile(r'\s*,\s*')
     split_newlines = re.compile(r'\n')
     remove_override = re.compile(r'\s*override\s+')
+    remove_each = re.compile(r'\s*each\s+')
     for package in formatted_packages:
         # add '(,' to ensure theres always enough blanks to cut down with [:3]
         name, left, right = split_type_args.split(package[0] + '(,')[:3]
@@ -114,9 +121,12 @@ def parse(file: TextIO) -> List[str]:
             overridden = remove_override.sub('', types[0])
             was_overridden = types[0] != overridden
             types[0] = overridden
+            each = remove_each.sub('', types[0])
+            was_each = types[0] != each
+            types[0] = each
             if len(types) == 1:
-                types = ['nulltype'] + types
-            operations = split_newlines.split(operations)
+                types = ['null'] + types
+            operations = split_newlines.split(operations.strip())
             type_alias = [keytypes.get(types[0], [types[0]]),
                            keytypes.get(types[1], [types[1]])]
             type_pairs = [[i,j] for i in type_alias[0] for j in type_alias[1]]
@@ -126,6 +136,9 @@ def parse(file: TextIO) -> List[str]:
                 override += type_pairs
             for pair in type_pairs:
                 functions += generate_function(pair, args, operations)
+                if was_each and pair[0] != pair[1]:
+                    functions += generate_function([pair[1], pair[0]],
+                                                   args, operations)
 
         if not parsed_packages.get(name):
             parsed_packages[name] = []
@@ -136,13 +149,13 @@ def parse(file: TextIO) -> List[str]:
         name = name.upper()
         lines += [f'struct OPERATOR_{name}_PACKAGE {{',
                   '\tLiteral operator()(auto, auto) {',
-                  '\t\treturn nulltype();  // ERROR',
+                  '\t\treturn Null();  // ERROR',
                   '\t}']
         lines += package
         lines.append('};\n')
         lines.append(f'Literal OPERATOR_{name}(Literal l, Literal r) {{')
         lines.append(f'\treturn std::visit(OPERATOR_{name}_PACKAGE(), l, r);')
-        lines.append('}')
+        lines.append('}\n\n')
 
     return lines
 

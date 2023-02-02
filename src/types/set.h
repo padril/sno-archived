@@ -1,7 +1,7 @@
 // Copyright 2023 Leo James Peckahm
 
-#ifndef SETNOTATION_SRC_SET_H_
-#define SETNOTATION_SRC_SET_H_
+#ifndef SRC_TYPES_SET_H_
+#define SRC_TYPES_SET_H_
 
 #include <iostream>
 #include <deque>
@@ -11,12 +11,12 @@ template <class T>
 class Set {
  public:
     // constants
-    static const size_t MAX_SIZE;
-    static const size_t MAX_DISPLAY;
-    static const bool DISPLAY_AROUND_ZERO;
-    static const __int64 MAX_ATTEMPTS;
-    static const T DEFAULT_GRAIN;
-    static inline const bool NULL_RULE(T x);
+    static const size_t MAX_SIZE = 64;
+    static const size_t MAX_DISPLAY = 15;
+    static const bool DISPLAY_AROUND_ZERO = true;
+    static const __int64 MAX_ATTEMPTS = 1000000;
+    static const T DEFAULT_GRAIN = 0.001;
+    static inline const bool NULL_RULE(T x) { return false; };
 
     // statically initialized
     Set()
@@ -167,13 +167,12 @@ class Set {
     }
 };
 
-// const definitions
-template <class T> const size_t Set<T>::MAX_SIZE = 64;
-template <class T> const size_t Set<T>::MAX_DISPLAY = 15;
-template <class T> const bool Set<T>::DISPLAY_AROUND_ZERO = true;
-template <class T> const __int64 Set<T>::MAX_ATTEMPTS = 1000000;
-template <class T> const T Set<T>::DEFAULT_GRAIN = 0.001;
-template <class T> inline const bool NULL_RULE(T x) { return false; };
+//// const definitions
+//template <class T> const size_t Set<T>::MAX_SIZE = 64;
+//template <class T> const size_t Set<T>::MAX_DISPLAY = 15;
+//template <class T> const bool Set<T>::DISPLAY_AROUND_ZERO = true;
+//template <class T> const __int64 Set<T>::MAX_ATTEMPTS = 1000000;
+//template <class T> const T Set<T>::DEFAULT_GRAIN = 0.001;
 
 #endif
 

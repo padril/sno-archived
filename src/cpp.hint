@@ -1,0 +1,5 @@
+#define TYPE_INT
+#define TYPE_BOOL
+#define TYPE_REAL
+
+#define _ARITHMETIC_OPERATOR

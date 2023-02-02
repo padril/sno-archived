@@ -2,13 +2,13 @@
 
 #include "src/phrase.h"
 #include "src/tokens.h"
-#include "src/operators.h"
+#include "src/operators/operators.h"
 
 Phrase::Phrase(const char* str) {
     expression = str;
     phrase = parse(expression);
     Literal result = evaluate(phrase.tokens);
-    OPERATOR_PRINT(nulltype(), result);
+    OPERATOR_PRINT(Null(), result);
 }
 
 Phrase::~Phrase() {}
@@ -116,7 +116,7 @@ Literal Phrase::evaluate(std::vector<Token> token_list, bool terminating) {
     using enum Type;
 
     // this left thing is magic it works so much better than a stack approach
-    Literal left = {nulltype()};
+    Literal left = {Null()};
     static std::list<Literal> literal_list = phrase.literals;
     static int pos = 0;
 
@@ -153,9 +153,16 @@ Literal Phrase::evaluate(std::vector<Token> token_list, bool terminating) {
         }
     }
 end:
-    if (std::holds_alternative<rational>(left)) {
-        if (std::get<rational>(left).denominator == 1) {
-            left = int(std::get<rational>(left));
+    // do some conversions down under certain circumstances
+    if (std::holds_alternative<TYPE_REAL>(left)) {
+        auto f = std::get<TYPE_REAL>(left);
+        if (f == std::floor(f)) {
+            left = static_cast<TYPE_INT>(f);
+        }
+    }
+    if (std::holds_alternative<Rational>(left)) {
+        if (std::get<Rational>(left).denominator() == 1) {
+            left = TYPE_INT(std::get<Rational>(left));
         }
     }
     return left;
