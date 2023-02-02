@@ -11,7 +11,7 @@ struct OPERATOR_PRINT_PACKAGE {
 		return Null();  // ERROR
 	}
 	Literal operator()(Null , Null arg) {
-		std::cout << "NULL\n";
+		std::cout << '\n';
 		return arg;
 	}
 	Literal operator()(Null , auto arg) {
@@ -19,6 +19,7 @@ struct OPERATOR_PRINT_PACKAGE {
 		return arg;
 	}
 };
+
 Literal OPERATOR_PRINT(Literal l, Literal r) {
 	return std::visit(OPERATOR_PRINT_PACKAGE(), l, r);
 }
@@ -68,6 +69,7 @@ struct OPERATOR_PLUS_PACKAGE {
 		return x + y;
 	}
 };
+
 Literal OPERATOR_PLUS(Literal l, Literal r) {
 	return std::visit(OPERATOR_PLUS_PACKAGE(), l, r);
 }
@@ -105,6 +107,7 @@ struct OPERATOR_TIMES_PACKAGE {
 		return x * y;
 	}
 };
+
 Literal OPERATOR_TIMES(Literal l, Literal r) {
 	return std::visit(OPERATOR_TIMES_PACKAGE(), l, r);
 }
@@ -115,7 +118,7 @@ struct OPERATOR_SLASH_PACKAGE {
 		return Null();  // ERROR
 	}
 	Literal operator()(TYPE_INT x, TYPE_INT y) {
-		return Rational(x, y);
+		return Rational{x, y};
 	}
 	Literal operator()(TYPE_INT x, Rational y) {
 		return x / y;
@@ -142,6 +145,7 @@ struct OPERATOR_SLASH_PACKAGE {
 		return x / y;
 	}
 };
+
 Literal OPERATOR_SLASH(Literal l, Literal r) {
 	return std::visit(OPERATOR_SLASH_PACKAGE(), l, r);
 }

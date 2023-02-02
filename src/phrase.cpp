@@ -4,6 +4,19 @@
 #include "src/tokens.h"
 #include "src/operators/operators.h"
 
+Phrase::Phrase() {
+    expression = "";
+    Literal result = Null();
+    OPERATOR_PRINT(Null(), result);
+}
+
+Phrase::Phrase(const std::string& str) {
+    expression = str;
+    phrase = parse(expression);
+    Literal result = evaluate(phrase);
+    OPERATOR_PRINT(Null(), result);
+}
+
 Phrase::Phrase(const char* str) {
     expression = str;
     phrase = parse(expression);

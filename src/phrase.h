@@ -21,8 +21,9 @@ class Phrase {
 
     std::vector<Literal> data;
 
+    Phrase();
     // TODO(padri): make these actually do something
-    // Phrase(const std::string& expression);
+    explicit Phrase(const std::string& expression);
     explicit Phrase(const char* expression);
     // Phrase(std::list<Token> token_list);
     // Phrase(const Phrase& other);
@@ -38,7 +39,6 @@ class Phrase {
 
     std::string expression;
     PhraseType phrase;
-    std::string result;
 };
 
 

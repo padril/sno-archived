@@ -3,9 +3,13 @@
 #include "src/phrase.h"
 
 int main() {
-    Phrase p0("3/2/4.1");
-    // TODO: bug because literal_list is static,
-    // change literal_list into a passed by reference
-    // pos held thing like token_list, or something?
-    Phrase p1("3/2/4");
+    std::string expression = "";
+    while (true) {
+        std::cout << ">>> ";
+        std::getline(std::cin, expression);
+        if (expression != "EXIT\n") {
+            break;
+        }
+        Phrase p = Phrase(expression);
+    }
 }

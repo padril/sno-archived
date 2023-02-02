@@ -1,6 +1,6 @@
 print (arg)
     null:
-        std::cout << "NULL\n";
+        std::cout << '\n';
         return arg;
     default:
         std::cout << arg << '\n';
