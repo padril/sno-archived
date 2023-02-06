@@ -7,6 +7,7 @@
 #include "src/type_definitions.h"
 #include "nulltype.h"
 #include "rational.h"
+#include "set.h"
 
 enum class Type {
     LITERAL_NULL,
@@ -15,6 +16,7 @@ enum class Type {
     LITERAL_RATIONAL,
     LITERAL_REAL,
     LITERAL_STRING,
+    LITERAL_SET,
 };
 
 typedef std::variant<
@@ -23,7 +25,9 @@ typedef std::variant<
     TYPE_INT,
     Rational, 
     TYPE_REAL, 
-    std::string
+    std::string,
+    Set<TYPE_INT>*,
+    Set<TYPE_REAL>*
     > Literal;
 
 #endif  // SRC_TYPES_LITERAL_H_

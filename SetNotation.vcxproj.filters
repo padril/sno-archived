@@ -52,7 +52,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="TODO.txt" />
+    <Text Include="TODO.md" />
     <Text Include="LICENSE.txt" />
     <Text Include="src\operators\operators.txt" />
   </ItemGroup>

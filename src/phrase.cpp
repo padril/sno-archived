@@ -26,6 +26,35 @@ Phrase::Phrase(const char* str) {
 
 Phrase::~Phrase() {}
 
+Literal parse_literal(const std::string& str, int* pos);
+
+Literal evaluate_set(const std::string& str, int* pos) {
+    using Universal = TYPE_REAL;
+
+    std::deque<Universal> init;
+
+    while (*pos < str.size()) {
+        switch (str[*pos]) {
+        case ',': break;
+        case '}': goto end;
+        default:
+            Universal x;
+            Literal y = parse_literal(str, pos);
+            if (std::holds_alternative<TYPE_INT>(y)) {
+                x = std::get<TYPE_INT>(y);
+            } else if (std::holds_alternative<TYPE_REAL>(y)) {
+                x = std::get<TYPE_REAL>(y);
+            }
+            init.push_back(x);
+        }
+        (*pos)++;
+    }
+end:
+    (*pos)++;
+    Set<Universal>* set = new Set<Universal>(init);
+    return set;
+}
+
 Literal parse_literal(const std::string& str, int* pos) {
     auto is_digit = [](char c) { return '0' <= c && c <= '9'; };
     auto is_alpha = [](char c) {
@@ -69,6 +98,9 @@ Literal parse_literal(const std::string& str, int* pos) {
         start++;
         auto ret = Literal(str.substr(start, *pos - start).c_str());
         return ret;
+    } else if (str[*pos] == '{') {
+        (*pos)++;
+        return evaluate_set(str, pos);
     } else if (is_alpha(str[*pos])) {
         // VARIABLE abc123
         while (start < size && (is_alpha(str[*pos]) || is_digit(str[*pos]))) {

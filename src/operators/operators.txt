@@ -1,6 +1,9 @@
 print (arg)
-    null:
+    override null:
         std::cout << '\n';
+        return arg;
+    override set:
+        std::cout << *arg << '\n';
         return arg;
     default:
         std::cout << arg << '\n';
@@ -11,6 +14,11 @@ plus (x)
 plus (x, y)
     numeric, numeric: return x + y;
     string, string: return x + y;
+
+minus (x)
+    numeric: return -x;
+minus (x, y)
+    numeric, numeric: return x - y;
 
 times (x, y)
     numeric, numeric: return x * y;

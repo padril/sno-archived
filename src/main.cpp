@@ -7,7 +7,7 @@ int main() {
     while (true) {
         std::cout << ">>> ";
         std::getline(std::cin, expression);
-        if (expression != "EXIT\n") {
+        if (expression == "EXIT") {
             break;
         }
         Phrase p = Phrase(expression);

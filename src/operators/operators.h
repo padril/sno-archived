@@ -1,5 +1,5 @@
-#ifndef SRC_OPERATORS_OPERATORS_H_
-#define SRC_OPERATORS_OPERATORS_H_
+#ifndef __OPERATORS_H_
+#define __OPERATORS_H_
 
 #include <iostream>
 #include "src/tokens.h"
@@ -10,11 +10,15 @@ struct OPERATOR_PRINT_PACKAGE {
 	Literal operator()(auto, auto) {
 		return Null();  // ERROR
 	}
-	Literal operator()(Null , Null arg) {
+	Literal operator()(Null, Null arg) {
 		std::cout << '\n';
 		return arg;
 	}
-	Literal operator()(Null , auto arg) {
+	Literal operator()(Null, Set<TYPE_REAL>*  arg) {
+		std::cout << *arg << '\n';
+		return arg;
+	}
+	Literal operator()(Null, auto   arg) {
 		std::cout << arg << '\n';
 		return arg;
 	}
@@ -29,49 +33,96 @@ struct OPERATOR_PLUS_PACKAGE {
 	Literal operator()(auto, auto) {
 		return Null();  // ERROR
 	}
-	Literal operator()(Null , TYPE_INT x) {
+	Literal operator()(Null, TYPE_INT x) {
 		return +x;
 	}
-	Literal operator()(Null , Rational x) {
+	Literal operator()(Null, Rational  x) {
 		return +x;
 	}
-	Literal operator()(Null , TYPE_REAL x) {
+	Literal operator()(Null, TYPE_REAL   x) {
 		return +x;
 	}
 	Literal operator()(TYPE_INT x, TYPE_INT y) {
 		return x + y;
 	}
-	Literal operator()(TYPE_INT x, Rational y) {
+	Literal operator()(TYPE_INT  x, Rational  y) {
 		return x + y;
 	}
-	Literal operator()(TYPE_INT x, TYPE_REAL y) {
+	Literal operator()(TYPE_INT   x, TYPE_REAL   y) {
 		return x + y;
 	}
-	Literal operator()(Rational x, TYPE_INT y) {
+	Literal operator()(Rational    x, TYPE_INT    y) {
 		return x + y;
 	}
-	Literal operator()(Rational x, Rational y) {
+	Literal operator()(Rational     x, Rational     y) {
 		return x + y;
 	}
-	Literal operator()(Rational x, TYPE_REAL y) {
+	Literal operator()(Rational      x, TYPE_REAL      y) {
 		return x + y;
 	}
-	Literal operator()(TYPE_REAL x, TYPE_INT y) {
+	Literal operator()(TYPE_REAL       x, TYPE_INT       y) {
 		return x + y;
 	}
-	Literal operator()(TYPE_REAL x, Rational y) {
+	Literal operator()(TYPE_REAL        x, Rational        y) {
 		return x + y;
 	}
-	Literal operator()(TYPE_REAL x, TYPE_REAL y) {
+	Literal operator()(TYPE_REAL         x, TYPE_REAL         y) {
 		return x + y;
 	}
-	Literal operator()(std::string x, std::string y) {
+	Literal operator()(std::string          x, std::string          y) {
 		return x + y;
 	}
 };
 
 Literal OPERATOR_PLUS(Literal l, Literal r) {
 	return std::visit(OPERATOR_PLUS_PACKAGE(), l, r);
+}
+
+
+struct OPERATOR_MINUS_PACKAGE {
+	Literal operator()(auto, auto) {
+		return Null();  // ERROR
+	}
+	Literal operator()(Null, TYPE_INT x) {
+		return -x;
+	}
+	Literal operator()(Null, Rational  x) {
+		return -x;
+	}
+	Literal operator()(Null, TYPE_REAL   x) {
+		return -x;
+	}
+	Literal operator()(TYPE_INT x, TYPE_INT y) {
+		return x - y;
+	}
+	Literal operator()(TYPE_INT  x, Rational  y) {
+		return x - y;
+	}
+	Literal operator()(TYPE_INT   x, TYPE_REAL   y) {
+		return x - y;
+	}
+	Literal operator()(Rational    x, TYPE_INT    y) {
+		return x - y;
+	}
+	Literal operator()(Rational     x, Rational     y) {
+		return x - y;
+	}
+	Literal operator()(Rational      x, TYPE_REAL      y) {
+		return x - y;
+	}
+	Literal operator()(TYPE_REAL       x, TYPE_INT       y) {
+		return x - y;
+	}
+	Literal operator()(TYPE_REAL        x, Rational        y) {
+		return x - y;
+	}
+	Literal operator()(TYPE_REAL         x, TYPE_REAL         y) {
+		return x - y;
+	}
+};
+
+Literal OPERATOR_MINUS(Literal l, Literal r) {
+	return std::visit(OPERATOR_MINUS_PACKAGE(), l, r);
 }
 
 
@@ -82,28 +133,28 @@ struct OPERATOR_TIMES_PACKAGE {
 	Literal operator()(TYPE_INT x, TYPE_INT y) {
 		return x * y;
 	}
-	Literal operator()(TYPE_INT x, Rational y) {
+	Literal operator()(TYPE_INT  x, Rational  y) {
 		return x * y;
 	}
-	Literal operator()(TYPE_INT x, TYPE_REAL y) {
+	Literal operator()(TYPE_INT   x, TYPE_REAL   y) {
 		return x * y;
 	}
-	Literal operator()(Rational x, TYPE_INT y) {
+	Literal operator()(Rational    x, TYPE_INT    y) {
 		return x * y;
 	}
-	Literal operator()(Rational x, Rational y) {
+	Literal operator()(Rational     x, Rational     y) {
 		return x * y;
 	}
-	Literal operator()(Rational x, TYPE_REAL y) {
+	Literal operator()(Rational      x, TYPE_REAL      y) {
 		return x * y;
 	}
-	Literal operator()(TYPE_REAL x, TYPE_INT y) {
+	Literal operator()(TYPE_REAL       x, TYPE_INT       y) {
 		return x * y;
 	}
-	Literal operator()(TYPE_REAL x, Rational y) {
+	Literal operator()(TYPE_REAL        x, Rational        y) {
 		return x * y;
 	}
-	Literal operator()(TYPE_REAL x, TYPE_REAL y) {
+	Literal operator()(TYPE_REAL         x, TYPE_REAL         y) {
 		return x * y;
 	}
 };
@@ -120,28 +171,28 @@ struct OPERATOR_SLASH_PACKAGE {
 	Literal operator()(TYPE_INT x, TYPE_INT y) {
 		return Rational{x, y};
 	}
-	Literal operator()(TYPE_INT x, Rational y) {
+	Literal operator()(TYPE_INT  x, Rational  y) {
 		return x / y;
 	}
-	Literal operator()(TYPE_INT x, TYPE_REAL y) {
+	Literal operator()(TYPE_INT   x, TYPE_REAL   y) {
 		return x / y;
 	}
-	Literal operator()(Rational x, TYPE_INT y) {
+	Literal operator()(Rational    x, TYPE_INT    y) {
 		return x / y;
 	}
-	Literal operator()(Rational x, Rational y) {
+	Literal operator()(Rational     x, Rational     y) {
 		return x / y;
 	}
-	Literal operator()(Rational x, TYPE_REAL y) {
+	Literal operator()(Rational      x, TYPE_REAL      y) {
 		return x / y;
 	}
-	Literal operator()(TYPE_REAL x, TYPE_INT y) {
+	Literal operator()(TYPE_REAL       x, TYPE_INT       y) {
 		return x / y;
 	}
-	Literal operator()(TYPE_REAL x, Rational y) {
+	Literal operator()(TYPE_REAL        x, Rational        y) {
 		return x / y;
 	}
-	Literal operator()(TYPE_REAL x, TYPE_REAL y) {
+	Literal operator()(TYPE_REAL         x, TYPE_REAL         y) {
 		return x / y;
 	}
 };
@@ -151,4 +202,4 @@ Literal OPERATOR_SLASH(Literal l, Literal r) {
 }
 
 
-#endif  // SRC_OPERATORS_OPERATORS_H_
+#endif  // __OPERATORS_H_

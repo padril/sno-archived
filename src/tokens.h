@@ -11,6 +11,8 @@ enum class Token {
 
     BEGIN_PRIORITY,
     END_PRIORITY,
+    BEGIN_SET,
+    END_SET,
 
     LITERAL,
 

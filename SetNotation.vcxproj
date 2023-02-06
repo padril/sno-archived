@@ -147,7 +147,7 @@
   <ItemGroup>
     <Text Include="LICENSE.txt" />
     <Text Include="src\operators\operators.txt" />
-    <Text Include="TODO.txt" />
+    <Text Include="TODO.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

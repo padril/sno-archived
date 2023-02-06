@@ -1,6 +1,0 @@
-#ifndef SRC_TYPES_BOOLEAN_H_
-#define SRC_TYPES_BOOLEAN_H_
-
-
-
-#endif  // SRC_TYPES_BOOLEAN_H_

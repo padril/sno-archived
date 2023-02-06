@@ -15,7 +15,7 @@ class Set {
     static const size_t MAX_DISPLAY = 15;
     static const bool DISPLAY_AROUND_ZERO = true;
     static const __int64 MAX_ATTEMPTS = 1000000;
-    static const T DEFAULT_GRAIN = 0.001;
+    static inline const double DEFAULT_GRAIN = 0.001;
     static inline const bool NULL_RULE(T x) { return false; };
 
     // statically initialized
