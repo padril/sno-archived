@@ -8,7 +8,7 @@
 #include <algorithm>
 
 template <class T>
-class Set {
+class TemplateSet {
  public:
     // constants
     static const size_t MAX_SIZE = 64;
@@ -19,17 +19,17 @@ class Set {
     static inline const bool NULL_RULE(T x) { return false; };
 
     // statically initialized
-    Set()
+    TemplateSet()
         : rule(NULL_RULE),
           left(0),
           right(std::is_same<T, int>::value ? -1 : -DEFAULT_GRAIN) {}
-    Set(std::initializer_list<T> values)
+    TemplateSet(std::initializer_list<T> values)
         : elements(truncate(values).elements) {}
-    explicit Set(std::deque<T> values) : elements(truncate(values).elements) {}
-    ~Set() {}
+    explicit TemplateSet(std::deque<T> values) : elements(truncate(values).elements) {}
+    ~TemplateSet() {}
 
     // dynamically initialized
-    explicit Set(bool (*mask)(T x), int attempts = MAX_ATTEMPTS,
+    explicit TemplateSet(bool (*mask)(T x), int attempts = MAX_ATTEMPTS,
                  float grain = DEFAULT_GRAIN) {
         if (std::is_same<T, int>::value) grain = 1;
 
@@ -66,7 +66,7 @@ class Set {
 
     // operators
     template <class S>
-    Set<S>& operator=(const Set<S>& other) {
+    TemplateSet<S>& operator=(const TemplateSet<S>& other) {
         if (this == &other) {  // guard self assignment
             return *this;
         }
@@ -78,7 +78,7 @@ class Set {
         return *this;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Set<T>& S) {
+    friend std::ostream& operator<<(std::ostream& os, const TemplateSet<T>& S) {
         auto truncated = truncate(S.elements, MAX_DISPLAY, DISPLAY_AROUND_ZERO);
         os << '{';
         if (truncated.on_left) os << "...";
@@ -122,7 +122,7 @@ class Set {
                 // since values is sorted, finding the min of abs(values)
                 // means finding where it changes to positive
                 int min_i = 1;
-                while (values[min_i] < 0) min_i++;
+                while ((double) values[min_i] < 0) min_i++;
                 min_i = -values[min_i - 1] < values[min_i] ? min_i - 1 : min_i;
                 __int64 end_i = end - begin;
                 int l = min_i - 1, r = min_i + 1;

@@ -58,7 +58,7 @@ TYPEDEFS = {
     'int': ['TYPE_INT'],
     'real': ['TYPE_REAL'],
     'string': ['std::string'],
-    'set': ['Set<TYPE_REAL>*'],
+    'set': ['Set'],
 
     'default': ['auto'],
     'numeric': ['TYPE_INT', 'Rational', 'TYPE_REAL'],

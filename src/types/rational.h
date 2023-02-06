@@ -6,6 +6,7 @@
 // Gets around some stupid type deduction issues
 #include <numeric>
 #include <iostream>
+#include <compare>
 
 class Rational {
 public:
@@ -41,6 +42,10 @@ public:
     _ARITHMETIC_PERMUTATIONS(/)
 
 #undef _ARITHMETIC_PERMUTATIONS
+
+    auto operator<=>(const Rational& x) const {
+        return TYPE_REAL(*this) - TYPE_REAL(x);
+    }
 
     friend std::ostream& operator<<(std::ostream& out, const Rational& x);
 

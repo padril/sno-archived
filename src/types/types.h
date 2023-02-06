@@ -11,13 +11,24 @@
 
 enum class Type {
     LITERAL_NULL,
-    LITERAL_INT,
     LITERAL_BOOL,
+    LITERAL_INT,
     LITERAL_RATIONAL,
     LITERAL_REAL,
     LITERAL_STRING,
     LITERAL_SET,
 };
+
+typedef std::variant<
+    TemplateSet<TYPE_INT>,
+    TemplateSet<Rational>,
+    TemplateSet<TYPE_REAL>
+> Set;
+
+//std::ostream& operator<<(std::ostream& out, const Set& set) {
+//    std::cout << "lmafo";
+//    return out;
+//}
 
 typedef std::variant<
     Null, 
@@ -26,8 +37,7 @@ typedef std::variant<
     Rational, 
     TYPE_REAL, 
     std::string,
-    Set<TYPE_INT>*,
-    Set<TYPE_REAL>*
+    Set
     > Literal;
 
 #endif  // SRC_TYPES_LITERAL_H_

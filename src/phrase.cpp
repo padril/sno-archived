@@ -51,7 +51,7 @@ Literal evaluate_set(const std::string& str, int* pos) {
     }
 end:
     (*pos)++;
-    Set<Universal>* set = new Set<Universal>(init);
+    Set set = TemplateSet(init);
     return set;
 }
 

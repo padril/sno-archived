@@ -1,5 +1,5 @@
-#ifndef __OPERATORS_H_
-#define __OPERATORS_H_
+#ifndef SRC_OPERATORS_OPERATORS_H_
+#define SRC_OPERATORS_OPERATORS_H_
 
 #include <iostream>
 #include "src/tokens.h"
@@ -14,8 +14,8 @@ struct OPERATOR_PRINT_PACKAGE {
 		std::cout << '\n';
 		return arg;
 	}
-	Literal operator()(Null, Set<TYPE_REAL>*  arg) {
-		std::cout << *arg << '\n';
+	Literal operator()(Null, Set arg) {
+		std::visit([](auto x) {std::cout << x << '\n'; }, arg);
 		return arg;
 	}
 	Literal operator()(Null, auto   arg) {
@@ -202,4 +202,4 @@ Literal OPERATOR_SLASH(Literal l, Literal r) {
 }
 
 
-#endif  // __OPERATORS_H_
+#endif  // SRC_OPERATORS_OPERATORS_H_
