@@ -3,14 +3,20 @@
 #ifndef SRC_TYPES_SET_H_
 #define SRC_TYPES_SET_H_
 
+
+#include "src/type_definitions.h"
+
 #include <iostream>
 #include <deque>
 #include <algorithm>
 
+
+// TODO(padril): I have a feeling most of the different Set types could
+//               be an actual use of, and I hate to say this, inheritance.
 template <class T>
 class TemplateSet {
  public:
-    // constants
+    // Constants
     static const size_t MAX_SIZE = 64;
     static const size_t MAX_DISPLAY = 15;
     static const bool DISPLAY_AROUND_ZERO = true;
@@ -18,17 +24,20 @@ class TemplateSet {
     static inline const double DEFAULT_GRAIN = 0.001;
     static inline const bool NULL_RULE(T x) { return false; };
 
-    // statically initialized
+
+    // Static Set
     TemplateSet()
         : rule(NULL_RULE),
           left(0),
           right(std::is_same<T, int>::value ? -1 : -DEFAULT_GRAIN) {}
     TemplateSet(std::initializer_list<T> values)
         : elements(truncate(values).elements) {}
-    explicit TemplateSet(std::deque<T> values) : elements(truncate(values).elements) {}
+    explicit TemplateSet(std::deque<T> values)
+        : elements(truncate(values).elements) {}
     ~TemplateSet() {}
 
-    // dynamically initialized
+
+    // Dynamic Set
     explicit TemplateSet(bool (*mask)(T x), int attempts = MAX_ATTEMPTS,
                  float grain = DEFAULT_GRAIN) {
         if (std::is_same<T, int>::value) grain = 1;
@@ -64,7 +73,8 @@ class TemplateSet {
         }
     }
 
-    // operators
+
+    // Operators
     template <class S>
     TemplateSet<S>& operator=(const TemplateSet<S>& other) {
         if (this == &other) {  // guard self assignment
@@ -92,16 +102,19 @@ class TemplateSet {
         return os;
     }
 
+
  private:
-    // variables
+    // Attributes
     std::deque<T> elements;  // containter
     bool (*rule)(T x);  // rule for generating new elements
     T left;  // how far left we've checked
     T right;  // how far right we've checked
 
+
+    // Private Methods
     // returns a custom struct with "Set elements, bool truncated"
     // allowing us to easily prune our set for printing or other
-    // TODO(padri): change from 'around_zero' to centered,
+    // TODO(padril): change from 'around_zero' to centered,
     //              and give an option to center at a specific point
     //              this will be useful when overloading operators
     static auto truncate(std::deque<T> values, size_t new_size = MAX_SIZE,
@@ -122,7 +135,7 @@ class TemplateSet {
                 // since values is sorted, finding the min of abs(values)
                 // means finding where it changes to positive
                 int min_i = 1;
-                while ((double) values[min_i] < 0) min_i++;
+                while (static_cast<SN_real>(values[min_i]) < 0) min_i++;
                 min_i = -values[min_i - 1] < values[min_i] ? min_i - 1 : min_i;
                 __int64 end_i = end - begin;
                 int l = min_i - 1, r = min_i + 1;
@@ -167,12 +180,5 @@ class TemplateSet {
     }
 };
 
-//// const definitions
-//template <class T> const size_t Set<T>::MAX_SIZE = 64;
-//template <class T> const size_t Set<T>::MAX_DISPLAY = 15;
-//template <class T> const bool Set<T>::DISPLAY_AROUND_ZERO = true;
-//template <class T> const __int64 Set<T>::MAX_ATTEMPTS = 1000000;
-//template <class T> const T Set<T>::DEFAULT_GRAIN = 0.001;
 
-#endif
-
+#endif  // SRC_TYPES_SET_H_

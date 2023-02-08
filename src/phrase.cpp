@@ -29,7 +29,7 @@ Phrase::~Phrase() {}
 Literal parse_literal(const std::string& str, int* pos);
 
 Literal evaluate_set(const std::string& str, int* pos) {
-    using Universal = TYPE_REAL;
+    using Universal = SN_real;
 
     std::deque<Universal> init;
 
@@ -40,10 +40,10 @@ Literal evaluate_set(const std::string& str, int* pos) {
         default:
             Universal x;
             Literal y = parse_literal(str, pos);
-            if (std::holds_alternative<TYPE_INT>(y)) {
-                x = std::get<TYPE_INT>(y);
-            } else if (std::holds_alternative<TYPE_REAL>(y)) {
-                x = std::get<TYPE_REAL>(y);
+            if (std::holds_alternative<SN_int>(y)) {
+                x = std::get<SN_int>(y);
+            } else if (std::holds_alternative<SN_real>(y)) {
+                x = std::get<SN_real>(y);
             }
             init.push_back(x);
         }
@@ -201,15 +201,15 @@ Literal Phrase::evaluate(PhraseType& local_phrase, bool terminating) {
     }
 end:
     // do some conversions down under certain circumstances
-    if (std::holds_alternative<TYPE_REAL>(left)) {
-        auto f = std::get<TYPE_REAL>(left);
+    if (std::holds_alternative<SN_real>(left)) {
+        auto f = std::get<SN_real>(left);
         if (f == std::floor(f)) {
-            left = static_cast<TYPE_INT>(f);
+            left = static_cast<SN_int>(f);
         }
     }
     if (std::holds_alternative<Rational>(left)) {
         if (std::get<Rational>(left).denominator() == 1) {
-            left = TYPE_INT(std::get<Rational>(left));
+            left = SN_int(std::get<Rational>(left));
         }
     }
     return left;

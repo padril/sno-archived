@@ -1,5 +1,5 @@
-#define TYPE_INT
-#define TYPE_BOOL
-#define TYPE_REAL
+#define SN_int
+#define SN_bool
+#define SN_real
 
 #define _ARITHMETIC_OPERATOR

@@ -3,7 +3,7 @@ print (arg)
         std::cout << '\n';
         return arg;
     override set:
-        std::cout << *arg << '\n';
+        std::visit([](auto x) {std::cout << x << '\n'; }, arg);
         return arg;
     default:
         std::cout << arg << '\n';

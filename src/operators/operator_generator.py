@@ -30,7 +30,15 @@ implementation are put into the same package.
 each: in a dyadic operator, mirrors the code for each permutation of types
 override: if a specific type combination is to be defined later, prevents
           the new definition
-          e.g: override real: do something; numeric: do something else;
+          e.g: in `override real: do something; numeric: do something else;`
+               numeric does not create a definition for reals.
+TODO: set[type]: overrides how sets work
+TODO: promote: (dyadic) promote both types to their greatest common type
+               before operation
+               e.g: `promote int, float: x + y` is equivalent to
+                    `int, float: (float) x + y`
+
+TODO: refactor
 """
 
 
@@ -54,14 +62,14 @@ INCLUDES = [
 
 TYPEDEFS = {
     'null': ['Null'],
-    'bool': ['TYPE_BOOL'],
-    'int': ['TYPE_INT'],
-    'real': ['TYPE_REAL'],
+    'bool': ['SN_bool'],
+    'int': ['SN_int'],
+    'real': ['SN_real'],
     'string': ['std::string'],
     'set': ['Set'],
 
     'default': ['auto'],
-    'numeric': ['TYPE_INT', 'Rational', 'TYPE_REAL'],
+    'numeric': ['SN_int', 'Rational', 'SN_real'],
     }
 
 
@@ -71,6 +79,9 @@ def generate_function(types: List[str], args: List[str],
 
     >>> generate_function(['nulltype', 'int'], ['', 'x'], ['return +x;\\n'])
     ['\\tLiteral operator()(nulltype, int x) {', '\\t\\treturn +x;\\n', '\\t}']
+
+    TODO: if one of the types is a Set[_Ty],
+    use the std::visit([](_Ty _arg) {}, arg); thing
     """
     if args[0] != '':
         args[0] = ' ' + args[0]

@@ -20,9 +20,9 @@ enum class Type {
 };
 
 typedef std::variant<
-    TemplateSet<TYPE_INT>,
+    TemplateSet<SN_int>,
     TemplateSet<Rational>,
-    TemplateSet<TYPE_REAL>
+    TemplateSet<SN_real>
 > Set;
 
 //std::ostream& operator<<(std::ostream& out, const Set& set) {
@@ -32,10 +32,10 @@ typedef std::variant<
 
 typedef std::variant<
     Null, 
-    TYPE_BOOL, 
-    TYPE_INT,
+    SN_bool, 
+    SN_int,
     Rational, 
-    TYPE_REAL, 
+    SN_real, 
     std::string,
     Set
     > Literal;

@@ -3,58 +3,63 @@
 
 #include "src/type_definitions.h"
 
-// Gets around some stupid type deduction issues
 #include <numeric>
 #include <iostream>
 #include <compare>
 
-class Rational {
-public:
-    Rational();
-    Rational(TYPE_INT p, TYPE_INT q = 1);
-    Rational(TYPE_REAL p, TYPE_INT q = 1) = delete;
-    ~Rational();
-   
-    void set();
-    void set(TYPE_INT x);
-    void set(TYPE_INT p, TYPE_INT q);
 
-    TYPE_INT numerator();
-    TYPE_INT denominator();
-
-    explicit operator TYPE_INT() const;
-    explicit operator TYPE_REAL() const;
-
-    friend Rational operator+(const Rational& x);
-    friend Rational operator-(const Rational& x);
-
-    // a mess, i hate this, but it will make everything happier
+// TODO: all of this mess could probably be something in operator_generator.py
 #define _ARITHMETIC_PERMUTATIONS(symbol)\
     friend Rational operator##symbol(const Rational& x, const Rational& y);\
-    friend Rational operator##symbol(const Rational& x, TYPE_INT y);\
-    friend Rational operator##symbol(TYPE_INT x, const Rational& y);\
-    friend TYPE_REAL operator##symbol(const Rational& x, TYPE_REAL y);\
-    friend TYPE_REAL operator##symbol(TYPE_REAL x, const Rational& y);
+    friend Rational operator##symbol(const Rational& x, SN_int            y);\
+    friend Rational operator##symbol(SN_int            x, const Rational& y);\
+    friend SN_real    operator##symbol(const Rational& x, SN_real           y);\
+    friend SN_real    operator##symbol(SN_real           x, const Rational& y);\
+
+
+class Rational {
+public:
+    // Constructors
+    // TODO: declare explicit and do type conversions in operator_generator.py
+    Rational(SN_int p = 0, SN_int q = 1);
+    ~Rational();
+
+
+    // Public Methods
+    SN_int numerator();
+    SN_int denominator();
+    void set(SN_int p = 0, SN_int q = 1);
+
+
+    // Conversion
+    explicit operator SN_int() const;
+    explicit operator SN_real() const;
+
+
+    // Operators
+    friend Rational operator+(const Rational& x);
+    friend Rational operator-(const Rational& x);
 
     _ARITHMETIC_PERMUTATIONS(+)
     _ARITHMETIC_PERMUTATIONS(-)
     _ARITHMETIC_PERMUTATIONS(*)
     _ARITHMETIC_PERMUTATIONS(/)
 
-#undef _ARITHMETIC_PERMUTATIONS
-
     auto operator<=>(const Rational& x) const {
-        return TYPE_REAL(*this) - TYPE_REAL(x);
+        return SN_real(*this) - SN_real(x);
     }
 
     friend std::ostream& operator<<(std::ostream& out, const Rational& x);
 
+
 private:
-    TYPE_INT num;
-    TYPE_INT den;
-    void simplify();
+    // Attributes
+    SN_int num;
+    SN_int den;
 };
 
-#undef SELECTIVELY_ENABLE_TYPES
+
+#undef _ARITHMETIC_PERMUTATIONS
+
 
 #endif  // SRC_TYPES_RATIONAL_H_
