@@ -1,15 +1,15 @@
 // Copyright 2023 Leo James Peckham
 
-#include "src/phrase.h"
+#include "src/parser/expression.h"
 
 int main() {
-    std::string expression = "";
+    std::string string = "";
     while (true) {
         std::cout << ">>> ";
-        std::getline(std::cin, expression);
-        if (expression == "EXIT") {
+        std::getline(std::cin, string);
+        if (string == "EXIT") {
             break;
         }
-        Phrase p = Phrase(expression);
+        Expression p = Expression(string);
     }
 }

@@ -1,34 +1,35 @@
 // Copyright 2023 Leo James Peckham
 
-#include "src/phrase.h"
-#include "src/tokens.h"
+
+#include "src/parser/expression.h"
 #include "src/operators/operators.h"
 
-Phrase::Phrase() {
-    expression = "";
+
+// Constructors
+Expression::Expression() {
+    text = "";
+    phrase = {};
     Literal result = Null();
+}
+
+Expression::Expression(const std::string& _text) {
+    text = _text;
+    phrase = parse(text);
+    Literal result = phrase.evaluate();
     OPERATOR_PRINT(Null(), result);
 }
 
-Phrase::Phrase(const std::string& str) {
-    expression = str;
-    phrase = parse(expression);
-    Literal result = evaluate(phrase);
+Expression::Expression(const char* str) {
+    text = str;
+    phrase = parse(text);
+    Literal result = phrase.evaluate();
     OPERATOR_PRINT(Null(), result);
 }
 
-Phrase::Phrase(const char* str) {
-    expression = str;
-    phrase = parse(expression);
-    Literal result = evaluate(phrase);
-    OPERATOR_PRINT(Null(), result);
-}
+Expression::~Expression() {}
 
-Phrase::~Phrase() {}
-
-Literal parse_literal(const std::string& str, int* pos);
-
-Literal evaluate_set(const std::string& str, int* pos) {
+// Helper Functions
+Literal Expression::parse_set(const std::string& str, int* pos) {
     using Universal = SN_real;
 
     std::deque<Universal> init;
@@ -55,7 +56,7 @@ end:
     return set;
 }
 
-Literal parse_literal(const std::string& str, int* pos) {
+Literal Expression::parse_literal(const std::string& str, int* pos) {
     auto is_digit = [](char c) { return '0' <= c && c <= '9'; };
     auto is_alpha = [](char c) {
       return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
@@ -100,7 +101,7 @@ Literal parse_literal(const std::string& str, int* pos) {
         return ret;
     } else if (str[*pos] == '{') {
         (*pos)++;
-        return evaluate_set(str, pos);
+        return parse_set(str, pos);
     } else if (is_alpha(str[*pos])) {
         // VARIABLE abc123
         while (start < size && (is_alpha(str[*pos]) || is_digit(str[*pos]))) {
@@ -125,7 +126,7 @@ Literal parse_literal(const std::string& str, int* pos) {
 }
 
 
-Phrase::PhraseType Phrase::parse(const std::string& str) {
+Phrase Expression::parse(const std::string& str) {
     size_t size = str.size();
     using enum Token;
 
@@ -136,6 +137,7 @@ Phrase::PhraseType Phrase::parse(const std::string& str) {
         switch (str[pos]) {
             case ' ': continue;
             case '+': local_phrase.push_back(PLUS); break;
+            case '-': local_phrase.push_back(MINUS); break;
             case '*': local_phrase.push_back(TIMES); break;
             case '/': local_phrase.push_back(SLASH); break;
             case '(': local_phrase.push_back(BEGIN_PRIORITY); break;
@@ -153,64 +155,5 @@ Phrase::PhraseType Phrase::parse(const std::string& str) {
         }
     }
 
-    return PhraseType{ local_phrase, local_literals };
-}
-
-Literal Phrase::evaluate(PhraseType& local_phrase, bool terminating) {
-    using enum Token;
-    using enum Type;
-
-    // this left thing is magic it works so much better than a stack approach
-    Literal left = {Null()};
-    std::list<Token>* tokens = &local_phrase.tokens;
-    std::list<Literal>* literals = &local_phrase.literals;
-
-    // the pos++; before an evaluate call prevents infinite loops
-    while (tokens->size() > 0) {
-        switch (tokens->front()) {
-            case BEGIN_PRIORITY:
-                tokens->pop_front();
-                left = evaluate(local_phrase, false);
-                break;
-            case END_PRIORITY:
-                tokens->pop_front();
-                return left;
-            case PLUS:
-                tokens->pop_front();
-                left = OPERATOR_PLUS(left, evaluate(local_phrase, true));
-                break;
-            case TIMES:
-                tokens->pop_front();
-                left = OPERATOR_TIMES(left, evaluate(local_phrase, true));
-                break;
-            case SLASH:
-                tokens->pop_front();
-                left = OPERATOR_SLASH(left, evaluate(local_phrase, true));
-                break;
-            case LITERAL:
-                tokens->pop_front();
-                left = literals->front();
-                literals->pop_front();
-                if (terminating) {
-                    goto end;
-                }
-                else {
-                    break;
-                }
-        }
-    }
-end:
-    // do some conversions down under certain circumstances
-    if (std::holds_alternative<SN_real>(left)) {
-        auto f = std::get<SN_real>(left);
-        if (f == std::floor(f)) {
-            left = static_cast<SN_int>(f);
-        }
-    }
-    if (std::holds_alternative<Rational>(left)) {
-        if (std::get<Rational>(left).denominator() == 1) {
-            left = SN_int(std::get<Rational>(left));
-        }
-    }
-    return left;
+    return Phrase{ local_phrase, local_literals };
 }

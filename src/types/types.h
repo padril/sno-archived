@@ -25,11 +25,6 @@ typedef std::variant<
     TemplateSet<SN_real>
 > Set;
 
-//std::ostream& operator<<(std::ostream& out, const Set& set) {
-//    std::cout << "lmafo";
-//    return out;
-//}
-
 typedef std::variant<
     Null, 
     SN_bool, 

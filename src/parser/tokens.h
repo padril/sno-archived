@@ -18,9 +18,8 @@ enum class Token {
 
     POSITIVE,
 
-    DYADS,  // admin token, used to determine monadic/dyadic
-    // usage of operators in `parse`
     PLUS,
+    MINUS,
     TIMES,
     SLASH,
 };
