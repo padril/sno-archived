@@ -1,4 +1,6 @@
-"""This script generates a .h file from an input .txt file to create operator
+"""Copyright Leo Peckham 2023
+
+This script generates a .h file from an input .txt file to create operator
 functionality.
 
 "operators.h" has a lot of repetitive, exhaustive code that, due to the
@@ -27,43 +29,73 @@ Names are case-insensitive. If both names are the same, the monadic and dyadic
 implementation are put into the same package.
 
 === Keywords ===
-each: in a dyadic operator, mirrors the code for each permutation of types
 override: if a specific type combination is to be defined later, prevents
           the new definition
           e.g: in `override real: do something; numeric: do something else;`
                numeric does not create a definition for reals.
+each: in a dyadic operator, mirrors the code for each permutation of types
 TODO: set[type]: overrides how sets work
-TODO: promote: (dyadic) promote both types to their greatest common type
+promote: (dyadic) promote both types to their greatest common type
                before operation
                e.g: `promote int, float: x + y` is equivalent to
                     `int, float: (float) x + y`
 
-TODO: refactor
+TODO: comment everything
+TODO: error handeling
+"""
+
+
+"""
+times (x, y)
+    promote int, float: x * y;
+
+GENERATES:
+struct OPERATOR_TIMES_PACKAGE {
+    Literal operator(SN_int x_, SN_float y_) {
+        SN_float x = static_cast<SN_float>(x_)
+        x * y;
+    }
+}
+"""
+
+
+
+
+
+"""
+IMPORTS
 """
 
 
 import sys
 import os
-from typing import List, TextIO, Tuple
+from typing import Dict, TypedDict, List, TextIO, Tuple, Iterable
 import re
+
+
+
+
+"""
+CONSTANTS
+"""
 
 
 DEFAULT_INPUT_FILENAME = DEFAULT_OUTPUT_FILENAME = 'operators'
 DEFAULT_INPUT_EXTENSION = '.txt'
-DEFAULT_OUTPUT_EXTENSION = '.h'
 DEFAULT_RELATIVE_WORKING_PATH = os.path.relpath(os.path.dirname(__file__))
 
 INCLUDES = [
     '<iostream>',
-    '"src/tokens.h"',
+    '"src/parser/tokens.h"',
     '"src/types/types.h"',
     '"src/type_definitions.h"'
     ]
 
-TYPEDEFS = {
+TYPES = {
     'null': ['Null'],
     'bool': ['SN_bool'],
     'int': ['SN_int'],
+    'rational': ['Rational'],
     'real': ['SN_real'],
     'string': ['std::string'],
     'set': ['Set'],
@@ -72,160 +104,26 @@ TYPEDEFS = {
     'numeric': ['SN_int', 'Rational', 'SN_real'],
     }
 
+PROMOTE_ORDER = (
+    'SN_int',
+    'Rational',
+    'SN_real',
+    )
 
-def generate_function(types: List[str], args: List[str],
-                      operations: List[str]) -> List[str]:
-    """Creates line by line list of a c++ operator() function
-
-    >>> generate_function(['nulltype', 'int'], ['', 'x'], ['return +x;\\n'])
-    ['\\tLiteral operator()(nulltype, int x) {', '\\t\\treturn +x;\\n', '\\t}']
-
-    TODO: if one of the types is a Set[_Ty],
-    use the std::visit([](_Ty _arg) {}, arg); thing
-    """
-    if args[0] != '':
-        args[0] = ' ' + args[0]
-    if args[1] != '':
-        args[1] = ' ' + args[1]
-    type_args = f'{types[0]}{args[0]}, {types[1]}{args[1]}'
-    ret = [f'\tLiteral operator()({type_args}) {{']
-    for operation in operations:
-        ret.append('\t\t' + operation)
-    ret.append('\t}')
-    return ret
+KEYWORDS = [
+    'override',
+    'each',
+    'promote',
+    ]
 
 
-def format_packages(file: TextIO) -> List[List[str]]:
-    """Splits file into head-function package prototypes
-
-    >>> from io import StringIO
-    >>> t = '''
-    ... foo (arg)
-    ...     string: return 'foo' + arg;
-    ... bar (arg)
-    ...     numeric:
-    ...         bar = 'bar' + (char) arg;
-    ...         return 'foo' + bar;'''
-    >>> f = StringIO(t)
-    >>> format_packages(f)
-    [\
-['foo (arg)\\n', \
-"string: return 'foo' + arg;\\n"], \
-['bar (arg)\\n', \
-"numeric: bar = 'bar' + (char) arg;\\nreturn 'foo' + bar;\\n"]]
-    """
-    packages = []
-    current_package = []
-    whitespace = 0
-
-    match_blank = re.compile(r'\s*')
-    match_multi_line_start = re.compile(r'.+:\n')
-    match_indented = re.compile(r'\s+')
-
-    for line in file:
-        if match_blank.fullmatch(line):
-            continue
-        elif match_multi_line_start.fullmatch(line):
-            # keep track of current whitespace, so we know when indenting stops
-            whitespace = len(line) - len(line.lstrip())
-            current_package.append(line.strip() + ' ')
-        elif match_indented.match(line):
-            if len(line) - len(line.lstrip()) > whitespace != 0:
-                # if we haven't stopped indenting, just tack onto the end
-                current_package[-1] += line.strip() + '\n'
-            else:
-                current_package.append(line.strip() + '\n')
-                whitespace = 0
-        else:
-            packages.append(current_package)
-            current_package = [line]
-    packages.append(current_package)
-    # first package is always empty, discard
-    return packages[1:]
 
 
-def parse(file: TextIO) -> List[str]:
-    """Turns a file into a line by line list of operator packages
+"""
+FILE ARGUMENT AND PATH READING
+"""
 
-    >>> from io import StringIO
-    >>> t = '''
-    ... foo (arg)'''
-    >>> f = StringIO(t)
-    >>> parse(f)
-    [\
-'struct OPERATOR_FOO_PACKAGE {', \
-'\\tLiteral operator()(auto, auto) {', \
-'\\t\\treturn Null();  // ERROR', \
-'\\t}', '};\\n', 'Literal OPERATOR_FOO(Literal l, Literal r) {', \
-'\\treturn std::visit(OPERATOR_FOO_PACKAGE(), l, r);', \
-'}\\n\\n']
-    """
-    formatted_packages = format_packages(file)
-    parsed_packages = {}
-    split_type_args = re.compile(r'\s*[(),]\s*')
-    split_type_operations = re.compile(r'\s*:\s*')
-    split_types = re.compile(r'\s*,\s*')
-    split_newlines = re.compile(r'\n')
-    remove_override = re.compile(r'\s*override\s+')
-    remove_each = re.compile(r'\s*each\s+')
-    for package in formatted_packages:
-        # add '(,' to ensure there's always enough blanks to cut down with [:3]
-        name, left, right = split_type_args.split(package[0] + '(,')[:3]
-        if right:
-            args = [left, right]
-        elif left:
-            args = ['', left]
-        else:
-            args = ['', '']
-        functions = []
-
-        override = []
-        for func in package[1:]:
-            types, operations = split_type_operations.split(func, 1)
-            types = split_types.split(types.strip())
-            overridden = remove_override.sub('', types[0])
-            was_overridden = types[0] != overridden
-            types[0] = overridden
-            each = remove_each.sub('', types[0])
-            was_each = types[0] != each
-            types[0] = each
-            if len(types) == 1:
-                types = ['null'] + types
-            operations = split_newlines.split(operations.strip())
-            type_alias = [TYPEDEFS.get(types[0], [types[0]]),
-                          TYPEDEFS.get(types[1], [types[1]])]
-            type_pairs = [[i, j] for i in type_alias[0] for j in type_alias[1]]
-            if not was_overridden:
-                type_pairs = [p for p in type_pairs if p not in override]
-            else:
-                override += type_pairs
-            for pair in type_pairs:
-                functions += generate_function(pair, args, operations)
-                if was_each and pair[0] != pair[1]:
-                    functions += generate_function([pair[1], pair[0]],
-                                                   args, operations)
-
-        if not parsed_packages.get(name):
-            parsed_packages[name] = []
-        parsed_packages[name] += functions
-
-    lines = []
-    for name, package in parsed_packages.items():
-        name = name.upper()
-        lines += [f'struct OPERATOR_{name}_PACKAGE {{',
-                  '\tLiteral operator()(auto, auto) {',
-                  '\t\treturn Null();  // ERROR',
-                  '\t}']
-        lines += package
-        lines.append('};\n')
-        lines.append(f'Literal OPERATOR_{name}(Literal l, Literal r) {{')
-        lines.append(f'\treturn std::visit(OPERATOR_{name}_PACKAGE(), l, r);')
-        lines.append('}\n\n')
-
-    return lines
-
-
-def get_args(arg_str: str):
+def get_file_args(arg_str: str):
     """Gets file arguments from a string
 
     >>> get_args('-i INPUT -k ./PATH/')
@@ -235,43 +133,292 @@ def get_args(arg_str: str):
     return {k: v for k, v in arg_pattern.findall(arg_str)}
 
 
-def get_paths(input_filename: str, output_filename: str,
-              relative_working_path: str) -> Tuple[str, str]:
+def get_file_paths(input_filename: str, output_filename: str,
+              relative_working_path: str) -> Tuple[str, str, str]:
     """Returns the paths used for input and output files
     """
     ipath = relative_working_path + '\\' + input_filename
     if os.path.splitext(ipath)[1] == '':  # no extension provided
         ipath += DEFAULT_INPUT_EXTENSION
     opath = relative_working_path + '\\' + output_filename
-    if os.path.splitext(opath)[1] == '':
-        opath += DEFAULT_OUTPUT_EXTENSION
-    return ipath, opath
+    hopath = opath + '.h'
+    cppopath = opath + '.cpp'
+    return ipath, hopath, cppopath
 
+
+
+
+"""
+REGEX UTILITY
+"""
+
+
+def _re_all_of(iterator: Iterable[str]):
+    """Makes an "or" group in regex from a string iterator"""
+    return f'(({")|(".join(iterator)}))'
+
+
+PACKAGE_PATTERN = re.compile(rf'''(
+    [ \t]*(?P<name>\w+)
+    (
+        [ \t]*\(
+        [ \t]*(?P<left>\w*)
+        (
+            [ \t]*,
+            [ \t]*(?P<right>\w*)
+        )?
+        [ \t]*\)
+    )
+    ([ \t]*\n)+
+
+    (?P<functions>
+        (
+            (?P<indent> [ \t]*)
+            ({_re_all_of(KEYWORDS)}[ \t]+)*
+            {_re_all_of(TYPES)} ([ \t]*{_re_all_of(TYPES)})? [ \t]* : .*\n
+            ( ((?P=indent) [ \t]+.*?\n) | ([ \t]*?\n) )* 
+        )+
+    )
+    )''', re.VERBOSE)
+ 
+ 
+FUNCTION_PATTERN = re.compile(rf'''(
+    ([ \t]*\n)*
+    (?P<indent> [ \t]*)
+    (?P<flags> ({_re_all_of(KEYWORDS)}[ \t]+)* )
+    (?P<types> {_re_all_of(TYPES)} ([ \t]*{_re_all_of(TYPES)})?) [ \t]* : [ \t]*
+    (?P<inline> .*?)\n
+    ([ \t]*\n)*
+    (?P<operations>(( (?P<real_indent>(?P=indent) [ \t]+).+\n ) | ([ \t]*?\n) )*)
+    ([ \t]*\n)*
+    )''', re.VERBOSE)
+
+
+
+
+"""
+DATATYPES
+"""
+
+
+ArgInfo = Tuple[str, str]
+
+
+class FunctionInfo(TypedDict):
+    flags: List[str]
+    types: Tuple[str, str]
+    operations: List[str]
+
+
+class PackageInfo(TypedDict):
+    args: ArgInfo
+    functions: List[FunctionInfo]
+
+
+
+
+"""
+PARSING
+"""
+
+
+def parse_function(match: re.Match) -> FunctionInfo:
+    func = match.groupdict()
+
+    flags = func['flags'].split()
+    types = func['types'].split()
+    if len(types) == 1:
+        types.insert(0, 'null')
+
+    if func['inline'] != '' and func['operations'] != '':
+        print(f'''SYNTAX ERROR: do not provide both inline and block operations
+                  \t{match.string}''')
+        raise SyntaxError
+    elif func['inline'] != '':
+        operations = [func['inline'].strip()]
+    elif func['operations'] != '':
+        operations = [op.replace(func['real_indent'], '', 1)
+                      for op in func['operations'].split('\n')
+                      if op != '']
+
+    return {'flags': flags,
+            'types': types,
+            'operations': operations}
+
+
+def parse_package(match: re.Match) -> Tuple[str, PackageInfo]:
+    package = match.groupdict()
+
+    name = package['name'].upper()
+
+    left: str
+    right: str
+    if package['right'] is not None:
+        left, right = package['left'], package['right']
+    else:
+        left, right = '', package['left']
+    args = left, right
+
+    functions: List[FunctionInfo] = []
+    for func in FUNCTION_PATTERN.finditer(package['functions']):
+        functions.append(parse_function(func))
+
+    return name, {'args': args, 'functions': functions}
+
+
+def parse(file: TextIO) -> Dict[str, List[PackageInfo]]:
+    packages: Dict[str, List[PackageInfo]] = {}
+    for package in PACKAGE_PATTERN.finditer(file.read()):
+        name, info = parse_package(package)
+        if packages.get(name):
+            packages[name].append(info)
+        else:
+            packages[name] = [info]
+    return packages
+
+
+
+
+"""
+C++ CODE GENERATION
+"""
+
+
+def generate_copyright() -> List[str]:
+    return ['// Copyright 2023 Leo Peckham']
+
+ 
+def generate_header_guard(path: str) -> Tuple[List[str], List[str]]:
+    header_path = re.sub(r'[\\.]', '_', path + '_').upper()
+    return [f'#ifndef {header_path}',
+            f'#define {header_path}'],\
+           [f'#endif  // {header_path}']
+
+
+def normalize_types(functions: List[FunctionInfo]) -> List[FunctionInfo]:
+    id_expanded: Dict[Tuple[str, str], int] = {}
+
+    for i, func in enumerate(functions):
+        left_types = TYPES[func['types'][0]]
+        right_types = TYPES[func['types'][1]]
+        expanded = {(l, r): i for l in left_types for r in right_types}
+
+        if 'each' in func['flags']:
+            expanded.update({(r, l): i for l, r in expanded if l != r})
+
+        if 'override' in func['flags']:
+            id_expanded.update(expanded)
+        else:
+            id_expanded.update({k: v for k, v in expanded.items()
+                                   if k not in id_expanded})
+
+    return [{'flags': func['flags'],
+            'types': k,
+            'operations': functions[v]['operations']}
+            for k, v in id_expanded.items()]
+
+
+def generate_includes():
+    return [f'#include {include}' for include in INCLUDES]
+
+
+def generate_function(args: ArgInfo, func: FunctionInfo) -> List[str]:
+    left_arg, right_arg = args
+    left_type, right_type = func['types']
+    ls = ' ' if left_arg else ''
+    rs = ' ' if right_arg else ''
+
+    promotion: str = ''
+    if 'promote' in func['flags']:
+        if left_type not in PROMOTE_ORDER:
+            print(f'PROMOTE_ERROR: {left_type} cannot be promoted\n\t{func}')
+            raise Exception
+        if right_type not in PROMOTE_ORDER:
+            print(f'PROMOTE_ERROR: {right_type} cannot be promoted\n\t{func}')
+            raise Exception
+
+        li = PROMOTE_ORDER.index(left_type)
+        ri = PROMOTE_ORDER.index(right_type)
+        if li < ri:
+            promotion = (f'{right_type} {left_arg} = '
+                         f'static_cast<{right_type}>({left_arg + "_"});')
+            left_arg += '_'
+        elif ri < li:
+            promotion = (f'{left_type} {right_arg} = '
+                         f'static_cast<{left_type}>({right_arg + "_"});')
+            right_arg += '_'
+
+    type_args = f'{left_type + ls + left_arg}, {right_type + rs + right_arg}'
+    return [f'Literal operator()({type_args}) {{'] + \
+           ([f'\t{promotion}'] if promotion != '' else []) + \
+           [f'\t{operation}' for operation in func['operations']] + \
+           [f'}}']
+
+
+def generate_package(name: str, infos: List[PackageInfo]) -> List[str]:
+    functions: List[str] = []
+    for info in infos:
+        for func in normalize_types(info['functions']):
+            functions += generate_function(info['args'], func) + ['']
+    return [f'struct OPERATOR_{name}_PACKAGE {{'] + \
+           ['\tLiteral operator()(auto, auto) { return Null(); }  // Error'] + \
+           ['\t' + l for l in functions[:-1]] + ['};'] + [''] + \
+           generate_operator(name)
+
+
+def generate_operator(name: str) -> List[str]:
+    return [f'Literal OPERATOR_{name}(Literal l, Literal r) {{',
+            f'\treturn std::visit(OPERATOR_{name}_PACKAGE(), l, r);',
+            '}']
+
+
+def generate_cpp_file(packages: Dict[str, List[PackageInfo]],
+                  h_path: str) -> List[str]:
+    cpp_packages = sum([generate_package(k, v) + \
+                        ['', ''] 
+                        for k, v in packages.items()], [])
+    return generate_copyright() + ['', ''] + \
+           [f'#include "{h_path}"', '', ''] + \
+           cpp_packages
+
+def generate_h_file(packages: Dict[str, List[PackageInfo]],
+                    h_path: str) -> List[str]:
+    start_guard, end_guard = generate_header_guard(h_path)
+    function_defs: List[str] = []
+    for name in packages.keys():
+        function_defs += [f'Literal OPERATOR_{name}(Literal l, Literal r);']
+        function_defs += ['']
+    return generate_copyright() + ['', ''] + \
+           start_guard + ['', ''] + \
+           generate_includes() + ['', ''] + \
+           function_defs + [''] + \
+           end_guard + ['']
+
+
+
+
+"""
+MAIN
+"""
 
 if __name__ == '__main__':
-    # import doctest
-    # doctest.testmod()
-
-    file_args = get_args(' '.join(sys.argv[1:]))
-    input_path, output_path = get_paths(
+    file_args = get_file_args(' '.join(sys.argv[1:]))
+    input_path, h_output_path, cpp_output_path = get_file_paths(
         file_args.get('i', DEFAULT_INPUT_FILENAME),
         file_args.get('o', DEFAULT_OUTPUT_FILENAME),
         file_args.get('p', DEFAULT_RELATIVE_WORKING_PATH))
-    header_path = re.sub(r'[\\.]', '_', output_path + '_').upper()
 
     input_file = open(input_path, 'r')
-    output_file = open(output_path, 'w')
+    h_output_file = open(h_output_path, 'w')
+    cpp_output_file = open(cpp_output_path, 'w')
 
-    output_file.write(f'#ifndef {header_path}\n#define {header_path}\n\n')
+    parsed_packages = parse(input_file)
 
-    for include in INCLUDES:
-        output_file.write(f'#include {include}\n')
-    output_file.write('\n')
-
-    for parsed_line in parse(input_file):
-        output_file.write(parsed_line + '\n')
-
-    output_file.write(f'#endif  // {header_path}\n')
+    h_output_file.write(
+        '\n'.join(generate_h_file(parsed_packages, h_output_path)))
+    cpp_output_file.write(
+        '\n'.join(generate_cpp_file(parsed_packages, h_output_path)))
 
     input_file.close()
-    output_file.close()
+    h_output_file.close()
+    cpp_output_file.close()

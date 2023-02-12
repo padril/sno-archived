@@ -1,4 +1,10 @@
 # TODO:
+
+---
+## Error Handelling
+This one is really important
+
+---
 ## Types
 - [ ] Administrative
 	- [x] Null
@@ -44,7 +50,7 @@
 			- [ ] how to show complex numbers, higher dimensional numbers, real numbers
 			- [ ] i want to be able to graph the mandlebrot set in less than 50 characters
 				``M := {c @ `C : |z_N| < N, z_(i+1) := z_i^2 + c, z_0 := 0}, N -> `inf ``
-
+---
 ## Example phrases
 ```a
 >>> S := {x @ !C : |x| < 3}
@@ -62,6 +68,8 @@ False	(Note: It would show a probability
 		 expressions, maybe will show false
 		 immediately)
 ```
+
+---
 ## Tokens
 
 | Check | Token	| Symbol | Example | Result |
@@ -138,4 +146,3 @@ False	(Note: It would show a probability
 | :x:					| There exists			| ?		| ? x : x = 3 	| True		|
 | :x:					| For all				| ~		| ~ x, x = 3	| False		|
 | :x:					| Define / Let			| :=	| x := 3, $x	| 3			|
-

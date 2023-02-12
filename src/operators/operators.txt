@@ -12,18 +12,18 @@ print (arg)
 plus (x)
     numeric: return +x;
 plus (x, y)
-    numeric, numeric: return x + y;
-    string, string: return x + y;
+    numeric numeric: return x + y;
+    string string: return x + y;
 
 minus (x)
     numeric: return -x;
 minus (x, y)
-    numeric, numeric: return x - y;
+    numeric numeric: return x - y;
 
 times (x, y)
-    numeric, numeric: return x * y;
+    numeric numeric: return x * y;
 
 slash (x, y)
-    override int, int: return Rational{x, y};
-    numeric, numeric: return x / y;
+    override int int: return Rational{x, y};
+    promote numeric numeric: return x / y;
     

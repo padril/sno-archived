@@ -18,10 +18,10 @@
     <ClInclude Include="src\types\set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\phrase.h">
+    <ClInclude Include="src\parser\phrase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\tokens.h">
+    <ClInclude Include="src\parser\tokens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\operators\operators.h">
@@ -39,15 +39,24 @@
     <ClInclude Include="src\type_definitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\parser\expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\phrase.cpp">
+    <ClCompile Include="src\parser\expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\types\rational.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser\phrase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\operators\operators.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
