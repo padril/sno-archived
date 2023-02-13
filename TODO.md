@@ -1,7 +1,7 @@
 # TODO:
 
 ---
-## Error Handelling
+## Error Handling
 This one is really important
 
 ---
