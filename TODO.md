@@ -36,20 +36,21 @@ This one is really important
 	- [ ] Multiset
 		- [ ] Sequence
 		- [ ] Function
-			- [ ] Derivatives
-			- [ ] Integrals
+- [ ] Function
+	- [ ] Derivatives
+	- [ ] Integrals
 - [ ] Operations
-- [ ] interpreter
-	- [ ] input stream
-		- [ ] figure out notation
-		- [ ] tokenizer
-		- [ ] text editor? or just in console for now
+- [ ] Interpreter
+	- [x] input stream
+		- [x] Figure out notation
+		- [x] Tokenizer
 	- [ ] output stream
 		- [ ] dynamic output
 		- [ ] graphing capability?
 			- [ ] how to show complex numbers, higher dimensional numbers, real numbers
 			- [ ] i want to be able to graph the mandlebrot set in less than 50 characters
 				``M := {c @ `C : |z_N| < N, z_(i+1) := z_i^2 + c, z_0 := 0}, N -> `inf ``
+	- [ ] IDE
 ---
 ## Example phrases
 ```a
@@ -126,12 +127,15 @@ False	(Note: It would show a probability
 | :x:					| ; Integral			| ;'	| (x^2);'dx		| 1/3 x^3	|
 | :x:					| ; Integral (eval)		| ;'	| [1 2];(x^2)'dx| 7/3		|
 |						| *COMPARISON*			|		|				|			|
+| :x:					| Equal				    | =		| 7 = 3 + 4		| True		|
 |						| ; Approx. (tolerance)	| ;=	| 0.2 ; 3 = 3.1	| True		|
 |						| ; Approx. (interval)	| ;=	| [1, 3) ; 1 = 1| False		|
-| :x:					| Equal				    | =		| 7 = 3 + 4		| True		|
 | :x:					| Not equal				| !=	| 7 != 3 + 4	| False		|
+| :x:					| ; Eqv. to Equal		| ;!=	| 7 ;!= 6.9		| False		|
 | :x:					| Less than				| <		| 7 < 3			| False		|
+| :x:					| ; Subset				| ;<	| {1} ;< `Z		| True		|
 | :x:					| Greater				| >		| 7 > 3			| True		|
+| :x:					| ; Superset			| ;>	| \`R ;> `Z		| True		|
 | :x:					| Less than or equal	| \<=	|				|			|
 | :x:					| Greater than or equal | >=	|				|			|
 |						| *SPECIAL SET*			|		|				|			|
@@ -142,7 +146,8 @@ False	(Note: It would show a probability
 | :x:					| And Statement			| ,		| 1 - 3, 2 - 3	| -2, -1	|
 | :x:					| Etc					| ...	| {0, 1, 2,...} |			|
 | :x:					| Print					| \$	| \$ "Hello"	| Hello		|
-| :x:					| ; Graph (axes)		| ; \$	| (x,y) ; \$ y = 2x |		|
+| :x:					| ; Graph (axes)		| ;\$	| (x,y) ;\$ y = 2x |		|
+| :x:					| ; Translate (language)| ;\$	| "tex" ;\$ "`R"| \\mathbb{R}|
 | :x:					| There exists			| ?		| ? x : x = 3 	| True		|
 | :x:					| For all				| ~		| ~ x, x = 3	| False		|
 | :x:					| Define / Let			| :=	| x := 3, $x	| 3			|
