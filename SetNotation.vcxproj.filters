@@ -72,6 +72,5 @@
     <None Include="CPPLINT.cfg" />
     <None Include="src\operators\operator_generator.py" />
     <None Include="src\types\README.md" />
-    <None Include="src\cpp.hint" />
   </ItemGroup>
 </Project>

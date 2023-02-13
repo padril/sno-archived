@@ -157,7 +157,6 @@
     <None Include=".gitignore" />
     <None Include="CPPLINT.cfg" />
     <None Include="README.md" />
-    <None Include="src\cpp.hint" />
     <None Include="src\operators\operator_generator.py" />
     <None Include="src\types\README.md" />
   </ItemGroup>

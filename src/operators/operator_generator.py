@@ -312,7 +312,7 @@ def normalize_types(functions: List[FunctionInfo]) -> List[FunctionInfo]:
             id_expanded.update({k: v for k, v in expanded.items()
                                    if k not in id_expanded})
 
-    return [{'flags': func['flags'],
+    return [{'flags': functions[v]['flags'],
             'types': k,
             'operations': functions[v]['operations']}
             for k, v in id_expanded.items()]
