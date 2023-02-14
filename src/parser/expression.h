@@ -22,6 +22,9 @@ class Expression {
     Phrase get_phrase();
     Literal execute(/*IdentifierList& scope*/);
 
+
+    static Phrase parse(const std::string& str);
+
  private:
     // Attributes
     std::string text;
@@ -29,7 +32,6 @@ class Expression {
 
 
     // Parsing
-    static Phrase parse(const std::string& str);
     static Literal parse_literal(const std::string& str, int* pos);
     static Literal parse_set(const std::string& str, int* pos);
 };

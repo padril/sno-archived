@@ -107,9 +107,9 @@ False	(Note: It would show a probability
 | :heavy_check_mark:	| Times					| *		| 1 * 2.5		| 2.5		|
 | :x:					| ; Product				| ;*	| n ; (1, 3) * 2n | 2.5		|
 | :x:					| Power				    | ^		| 2 ^ 3			| 8			|
-| :x:					| ; Square root (/)		| ;^	| ;^9			| 3			|
-| :x:					| ; Matrix transpose	| ;^	| ;^[[1 2][3 4]]| [[1 3][2 4]]|
-| :x:					| ; Function inverse	| ;^	| ;\^(x^2)		| +-;^x		|
+| :x:					| ; Square root (/)		| ;^	| ;\^9			| 3			|
+| :x:					| ; Matrix transpose	| ;^	| ;\^[[1 2][3 4]]| [[1 3][2 4]]|
+| :x:					| ; Function inverse	| ;^	| ;\^(x\^2)		| +-;\^x	|
 | :x:					| Power				    | ^		| 2 ^ 3			| 8			|
 | :x:					| Length			    | #		| #[1 2 3]		| 3			|
 | :x:					| ; Cardinality			| ;#	| ;#{1,2,3,...}	| 1			|
