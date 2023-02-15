@@ -40,6 +40,7 @@ promote: (dyadic) promote both types to their greatest common type
                e.g: `promote int, float: x + y` is equivalent to
                     `int, float: (float) x + y`
 
+TODO: something to reduce 'return arg' usage
 TODO: comment everything
 TODO: error handeling
 """

@@ -20,6 +20,7 @@ class Expression {
     // Public Members
     std::wstring to_latex();
     Phrase get_phrase();
+    Phrase phrase;
     Literal execute(/*IdentifierList& scope*/);
 
 
@@ -28,7 +29,6 @@ class Expression {
  private:
     // Attributes
     std::wstring text;
-    Phrase phrase;
 
 
     // Parsing

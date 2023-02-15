@@ -15,15 +15,11 @@ Expression::Expression() {
 Expression::Expression(const std::wstring& str) {
     text = str;
     phrase = parse(text);
-    Literal result = phrase.evaluate();
-    OPERATOR_PRINT(Null(), result);
 }
 
 Expression::Expression(const wchar_t* str) {
     text = str;
     phrase = parse(text);
-    Literal result = phrase.evaluate();
-    OPERATOR_PRINT(Null(), result);
 }
 
 Expression::~Expression() {}
@@ -142,6 +138,11 @@ Phrase Expression::parse(const std::wstring& str) {
             case '/': local_phrase.push_back(SLASH); break;
             // CURRENTLY JUST A DEBUG TREE PRINT
             case '$': local_phrase.push_back(PRINT); break;
+            case ';':
+                switch (str[pos + 1]) {
+                case '$': local_phrase.push_back(DEBUG_PRINT); break;
+                }
+                break;
             case '(': local_phrase.push_back(BEGIN_PRIORITY); break;
             case ')': local_phrase.push_back(END_PRIORITY); break;
             case ':':

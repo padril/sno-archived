@@ -22,6 +22,7 @@ enum class Token : SN_token {
     TIMES = '*',
     SLASH = '/',
     PRINT = '$',
+    DEBUG_PRINT = ';$',
 };
 
 std::wstring token_to_string(Token token);

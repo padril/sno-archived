@@ -4,7 +4,30 @@
 #include "src\operators\operators.h"
 
 
-struct OPERATOR_TERMINAL_PACKAGE {
+struct OPERATOR_REPRESENTATION_PACKAGE {
+	Literal operator()(auto, auto) { return Null(); }  // Error
+	Literal operator()(Null, std::wstring arg) {
+		std::wcout << L'"' + arg + L'"';
+		return arg;
+	}
+	
+	Literal operator()(Null, Set arg) {
+		std::visit([](auto x) {std::wcout << x << '\n'; }, arg);
+		return arg;
+	}
+	
+	Literal operator()(Null, auto arg) {
+		std::wcout << arg << '\n';
+		return arg;
+	}
+};
+
+Literal OPERATOR_REPRESENTATION(Literal l, Literal r) {
+	return std::visit(OPERATOR_REPRESENTATION_PACKAGE(), l, r);
+}
+
+
+struct OPERATOR_PRINT_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
 	Literal operator()(Null, Null arg) {
 		std::wcout << '\n';
@@ -22,12 +45,12 @@ struct OPERATOR_TERMINAL_PACKAGE {
 	}
 };
 
-Literal OPERATOR_TERMINAL(Literal l, Literal r) {
-	return std::visit(OPERATOR_TERMINAL_PACKAGE(), l, r);
+Literal OPERATOR_PRINT(Literal l, Literal r) {
+	return std::visit(OPERATOR_PRINT_PACKAGE(), l, r);
 }
 
 
-struct OPERATOR_PRINT_PACKAGE {
+struct OPERATOR_DEBUG_PRINT_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
 	Literal operator()(Null, std::wstring arg) {
 		Phrase p = Expression::parse(arg);
@@ -36,8 +59,8 @@ struct OPERATOR_PRINT_PACKAGE {
 	}
 };
 
-Literal OPERATOR_PRINT(Literal l, Literal r) {
-	return std::visit(OPERATOR_PRINT_PACKAGE(), l, r);
+Literal OPERATOR_DEBUG_PRINT(Literal l, Literal r) {
+	return std::visit(OPERATOR_DEBUG_PRINT_PACKAGE(), l, r);
 }
 
 

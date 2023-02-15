@@ -67,9 +67,19 @@ Node* Phrase::tree() {
     using enum Token;
     std::list<Node*> nodes;
 
+    auto current_literal = literals.begin();
+    Literal value;
+
     nodes.push_back(new Node{ BEGIN_PRIORITY });
     for (Token token : tokens) {
-        nodes.push_back(new Node{ token });
+        if (token == LITERAL) {
+            value = *current_literal;
+            ++current_literal;
+        }
+        else {
+            value = Literal(Null{});
+        }
+        nodes.push_back(new Node{ token, value });
     }
     nodes.push_back(new Node{ END_PRIORITY });
 
@@ -78,57 +88,35 @@ Node* Phrase::tree() {
     return nodes.front();
 }
 
+Literal subevaluate(Node* head) {
+    using enum Token;
+
+    switch (head->token) {
+    case LITERAL:
+        return head->value;
+    case PLUS:
+        return OPERATOR_PLUS(subevaluate(head->left),
+            subevaluate(head->right));
+    case MINUS:
+        return OPERATOR_MINUS(subevaluate(head->left),
+            subevaluate(head->right));
+    case TIMES:
+        return OPERATOR_TIMES(subevaluate(head->left),
+            subevaluate(head->right));
+        break;
+    case SLASH:
+        return OPERATOR_SLASH(subevaluate(head->left),
+            subevaluate(head->right));
+    case PRINT:
+        return OPERATOR_PRINT(subevaluate(head->left),
+            subevaluate(head->right));
+    case DEBUG_PRINT:
+        return OPERATOR_DEBUG_PRINT(subevaluate(head->left),
+            subevaluate(head->right));
+    }
+}
 
 Literal Phrase::evaluate(bool terminating) {
-    using enum Token;
-    using enum Type;
-
-    Literal left = Null();
-
-    while (tokens.size() > 0) {
-        Token current_token = tokens.front();
-        tokens.pop_front();
-        switch (current_token) {
-        case BEGIN_PRIORITY:
-            left = evaluate();
-            break;
-        case END_PRIORITY:
-            goto end;
-        case PLUS:
-            left = OPERATOR_PLUS(left, evaluate(true));
-            break;
-        case MINUS:
-            left = OPERATOR_MINUS(left, evaluate(true));
-            break;
-        case TIMES:
-            left = OPERATOR_TIMES(left, evaluate(true));
-            break;
-        case SLASH:
-            left = OPERATOR_SLASH(left, evaluate(true));
-            break;
-        case LITERAL:
-            left = literals.front();
-            literals.pop_front();
-            if (terminating) {
-                goto end;
-            }
-            else {
-                break;
-            }
-        }
-    }
-end:
-    // do some conversions down under certain circumstances
-    if (std::holds_alternative<SN_real>(left)) {
-        auto f = std::get<SN_real>(left);
-        if (f == std::floor(f)) {
-            left = static_cast<SN_int>(f);
-        }
-    }
-    if (std::holds_alternative<Rational>(left)) {
-        if (std::get<Rational>(left).denominator() == 1) {
-            left = SN_int(std::get<Rational>(left));
-        }
-    }
-    return left;
+    Node* head = tree();
+    return subevaluate(head);
 }

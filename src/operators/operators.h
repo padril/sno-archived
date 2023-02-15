@@ -13,9 +13,11 @@
 #include "src/parser/phrase.h"
 
 
-Literal OPERATOR_TERMINAL(Literal l, Literal r);
+Literal OPERATOR_REPRESENTATION(Literal l, Literal r);
 
 Literal OPERATOR_PRINT(Literal l, Literal r);
+
+Literal OPERATOR_DEBUG_PRINT(Literal l, Literal r);
 
 Literal OPERATOR_PLUS(Literal l, Literal r);
 
