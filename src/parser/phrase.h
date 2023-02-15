@@ -15,7 +15,7 @@
 #include "src/parser/tokens.h"
 #include "src/types/types.h"
 
-
+// TODO(padril): move node into a .h .cpp thing
 struct Node {
     Token token;
     Literal value;  // use optional here in the future
@@ -54,7 +54,8 @@ struct Node {
             return { {repr}, repr.size() / 2 };
         }
         else if (left == nullptr && right != nullptr) {
-
+            // TODO(padril): implement, but also need to get tree to function
+            //               with monads first
         }
         else if (left != nullptr && right != nullptr) {
             Screen l = left->display();
@@ -63,7 +64,7 @@ struct Node {
             size_t rh = r.screen.size(); size_t rw = r.screen[0].size();
             size_t mh = std::max(lh, rh); size_t mw = std::max(lw, rw);
 
-            // Extra 4 are the header
+            // extra 2 are the header
             std::vector<std::wstring> ret(mh + 2);
 
             // left

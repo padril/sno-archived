@@ -20,6 +20,6 @@ int main() {
     //    Expression p = Expression(string);
     //}
 
-    Phrase p = Expression::parse(L"1 * (3 - 6) + 4 + 4");
+    Phrase p = Expression::parse(L"4 / (3) + 2");
     std::wcout << p.tree();
 }

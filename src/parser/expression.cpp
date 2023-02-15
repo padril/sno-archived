@@ -12,8 +12,8 @@ Expression::Expression() {
     Literal result = Null();
 }
 
-Expression::Expression(const std::wstring& _text) {
-    text = _text;
+Expression::Expression(const std::wstring& str) {
+    text = str;
     phrase = parse(text);
     Literal result = phrase.evaluate();
     OPERATOR_PRINT(Null(), result);
