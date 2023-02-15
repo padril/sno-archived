@@ -12,28 +12,28 @@ class Expression {
  public:
     // Constructors
     Expression();
-    explicit Expression(const std::string& _text);
-    explicit Expression(const char* _text);
+    explicit Expression(const std::wstring& _text);
+    explicit Expression(const wchar_t* _text);
     ~Expression();
 
     
     // Public Members
-    std::string to_latex();
+    std::wstring to_latex();
     Phrase get_phrase();
     Literal execute(/*IdentifierList& scope*/);
 
 
-    static Phrase parse(const std::string& str);
+    static Phrase parse(const std::wstring& str);
 
  private:
     // Attributes
-    std::string text;
+    std::wstring text;
     Phrase phrase;
 
 
     // Parsing
-    static Literal parse_literal(const std::string& str, int* pos);
-    static Literal parse_set(const std::string& str, int* pos);
+    static Literal parse_literal(const std::wstring& str, int* pos);
+    static Literal parse_set(const std::wstring& str, int* pos);
 };
 
 

@@ -4,20 +4,34 @@
 #include "src\operators\operators.h"
 
 
-struct OPERATOR_PRINT_PACKAGE {
+struct OPERATOR_TERMINAL_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
 	Literal operator()(Null, Null arg) {
-		std::cout << '\n';
+		std::wcout << '\n';
 		return arg;
 	}
 	
 	Literal operator()(Null, Set arg) {
-		std::visit([](auto x) {std::cout << x << '\n'; }, arg);
+		std::visit([](auto x) {std::wcout << x << '\n'; }, arg);
 		return arg;
 	}
 	
 	Literal operator()(Null, auto arg) {
-		std::cout << arg << '\n';
+		std::wcout << arg << '\n';
+		return arg;
+	}
+};
+
+Literal OPERATOR_TERMINAL(Literal l, Literal r) {
+	return std::visit(OPERATOR_TERMINAL_PACKAGE(), l, r);
+}
+
+
+struct OPERATOR_PRINT_PACKAGE {
+	Literal operator()(auto, auto) { return Null(); }  // Error
+	Literal operator()(Null, std::wstring arg) {
+		Phrase p = Expression::parse(arg);
+		std::wcout << p.tree();
 		return arg;
 	}
 };
@@ -83,7 +97,7 @@ struct OPERATOR_PLUS_PACKAGE {
 		return x + y;
 	}
 	
-	Literal operator()(std::string x, std::string y) {
+	Literal operator()(std::wstring x, std::wstring y) {
 		return x + y;
 	}
 };

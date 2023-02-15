@@ -37,7 +37,7 @@ Rational operator/(const Rational & x, const Rational & y) {
     return { x.num * y.den, y.num * x.den };
 }
 
-std::ostream& operator<<(std::ostream& out, const Rational& x) {
+std::wostream& operator<<(std::wostream& out, const Rational& x) {
     out << x.num << '/' << x.den;
     return out;
 }

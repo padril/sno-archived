@@ -1,12 +1,18 @@
-print (arg)
+terminal (arg)
     override null:
-        std::cout << '\n';
+        std::wcout << '\n';
         return arg;
     override set:
-        std::visit([](auto x) {std::cout << x << '\n'; }, arg);
+        std::visit([](auto x) {std::wcout << x << '\n'; }, arg);
         return arg;
     default:
-        std::cout << arg << '\n';
+        std::wcout << arg << '\n';
+        return arg;
+
+print (arg)
+    string:
+        Phrase p = Expression::parse(arg);
+        std::wcout << p.tree();
         return arg;
 
 plus (x)

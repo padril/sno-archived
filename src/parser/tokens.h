@@ -6,22 +6,24 @@
 #include <numeric>
 #include "src/types/set.h"
 
-enum class Token {
-    END_PHRASE,
+enum class Token : SN_token {
+    BEGIN_PHRASE = 'B',
+    END_PHRASE = 'E',
 
-    BEGIN_PRIORITY,
-    END_PRIORITY,
-    BEGIN_SET,
-    END_SET,
+    BEGIN_PRIORITY = '(',
+    END_PRIORITY = ')',
+    BEGIN_SET = '{',
+    END_SET = '}',
 
-    LITERAL,
+    LITERAL = 'L',
 
-    POSITIVE,
-
-    PLUS,
-    MINUS,
-    TIMES,
-    SLASH,
+    PLUS = '+',
+    MINUS = '-',
+    TIMES = '*',
+    SLASH = '/',
+    PRINT = '$',
 };
+
+std::wstring token_to_string(Token token);
 
 #endif // SRC_TOKENS_H_

@@ -7,4 +7,7 @@ typedef long    SN_int;
 typedef bool    SN_bool;
 typedef double  SN_real;
 
+typedef uint16_t SN_token;
+
+
 #endif  // SRC_TYPES_DEFINITONS_H_

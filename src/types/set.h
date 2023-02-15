@@ -88,7 +88,7 @@ class TemplateSet {
         return *this;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const TemplateSet<T>& S) {
+    friend std::wostream& operator<<(std::wostream& os, const TemplateSet<T>& S) {
         auto truncated = truncate(S.elements, MAX_DISPLAY, DISPLAY_AROUND_ZERO);
         os << '{';
         if (truncated.on_left) os << "...";

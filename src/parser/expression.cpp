@@ -7,19 +7,19 @@
 
 // Constructors
 Expression::Expression() {
-    text = "";
+    text = L"";
     phrase = {};
     Literal result = Null();
 }
 
-Expression::Expression(const std::string& _text) {
+Expression::Expression(const std::wstring& _text) {
     text = _text;
     phrase = parse(text);
     Literal result = phrase.evaluate();
     OPERATOR_PRINT(Null(), result);
 }
 
-Expression::Expression(const char* str) {
+Expression::Expression(const wchar_t* str) {
     text = str;
     phrase = parse(text);
     Literal result = phrase.evaluate();
@@ -29,7 +29,7 @@ Expression::Expression(const char* str) {
 Expression::~Expression() {}
 
 // Helper Functions
-Literal Expression::parse_set(const std::string& str, int* pos) {
+Literal Expression::parse_set(const std::wstring& str, int* pos) {
     using Universal = SN_real;
 
     std::deque<Universal> init;
@@ -56,7 +56,7 @@ end:
     return set;
 }
 
-Literal Expression::parse_literal(const std::string& str, int* pos) {
+Literal Expression::parse_literal(const std::wstring& str, int* pos) {
     auto is_digit = [](char c) { return '0' <= c && c <= '9'; };
     auto is_alpha = [](char c) {
       return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
@@ -126,7 +126,7 @@ Literal Expression::parse_literal(const std::string& str, int* pos) {
 }
 
 
-Phrase Expression::parse(const std::string& str) {
+Phrase Expression::parse(const std::wstring& str) {
     size_t size = str.size();
     using enum Token;
 
@@ -140,6 +140,8 @@ Phrase Expression::parse(const std::string& str) {
             case '-': local_phrase.push_back(MINUS); break;
             case '*': local_phrase.push_back(TIMES); break;
             case '/': local_phrase.push_back(SLASH); break;
+            // CURRENTLY JUST A DEBUG TREE PRINT
+            case '$': local_phrase.push_back(PRINT); break;
             case '(': local_phrase.push_back(BEGIN_PRIORITY); break;
             case ')': local_phrase.push_back(END_PRIORITY); break;
             case ':':

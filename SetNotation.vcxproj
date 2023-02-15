@@ -145,6 +145,7 @@
     <ClCompile Include="src\parser\phrase.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\parser\expression.cpp" />
+    <ClCompile Include="src\parser\tokens.cpp" />
     <ClCompile Include="src\types\rational.cpp" />
   </ItemGroup>
   <ItemGroup>

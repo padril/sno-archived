@@ -41,7 +41,7 @@ class Rational {
         return SN_real(*this) - SN_real(x);
     }
 
-    friend std::ostream& operator<<(std::ostream& out, const Rational& x);
+    friend std::wostream& operator<<(std::wostream& out, const Rational& x);
 
 
  private:

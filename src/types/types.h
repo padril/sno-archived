@@ -31,7 +31,7 @@ typedef std::variant<
     SN_int,
     Rational, 
     SN_real, 
-    std::string,
+    std::wstring,
     Set
     > Literal;
 

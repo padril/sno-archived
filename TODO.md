@@ -102,7 +102,7 @@ False	(Note: It would show a probability
 | :x:					| ; Sum	(iterator)		| ;+	| n ; (1, 3) + 2n | 12		|
 | :heavy_check_mark:	| Plus (Dyad)			| +		| 1 + 2.5		| 3			|
 | :heavy_check_mark:	| Minus (Monad)			| -		| -3			| -3		|
-| :x:					| Plus/minus			| +-	| +-3			|			|
+| :x:					| Plus/minus			| +-	| +-3			| {-3, 3}	|
 | :heavy_check_mark:	| Minus (Dyad)			| -		| 1 - 2.5		| -1		|
 | :heavy_check_mark:	| Times					| *		| 1 * 2.5		| 2.5		|
 | :x:					| ; Product				| ;*	| n ; (1, 3) * 2n | 2.5		|
@@ -113,7 +113,7 @@ False	(Note: It would show a probability
 | :x:					| Power				    | ^		| 2 ^ 3			| 8			|
 | :x:					| Length			    | #		| #[1 2 3]		| 3			|
 | :x:					| ; Cardinality			| ;#	| ;#{1,2,3,...}	| 1			|
-| :x:					| Reshape				| #		| 2 2#[1 2 3 4] | [[1 2][3 4]]
+| :x:					| Reshape				| #		| 2 2#[1 2 3 4] | [[1 2][3 4]]|
 | :heavy_check_mark:	| Slash					| /		| 1 / 2.5		| 0.4		|
 | :x:					| ; Integer division	| ;/	| 6 / 2.5		| 2			|	
 | :x:					| Modulus				| %		| 7 % 3			| 1			|
@@ -146,8 +146,10 @@ False	(Note: It would show a probability
 | :x:					| And Statement			| ,		| 1 - 3, 2 - 3	| -2, -1	|
 | :x:					| Etc					| ...	| {0, 1, 2,...} |			|
 | :x:					| Print					| \$	| \$ "Hello"	| Hello		|
-| :x:					| ; Graph (axes)		| ;\$	| (x,y) ;\$ y = 2x |		|
-| :x:					| ; Translate (language)| ;\$	| "tex" ;\$ "`R"| \\mathbb{R}|
+| :x:					| Format print			| \$	| x:=3,x$"x is \1"| x is 3	|
+| :x:					| ; Graph (axes) "g"	| ;\$	| "g" ; (x,y) \$ y = 2x |	|
+| :x:					| ; Translate (lang) "t"| ;\$	| "t" ; "tex" \$ "`R"| \\mathbb{R}|
+| :x:					| ; Debug tree "d" "t"	| ;\$	| "d" ; "t" $ "2 + 3"|		|
 | :x:					| There exists			| ?		| ? x : x = 3 	| True		|
 | :x:					| For all				| ~		| ~ x, x = 3	| False		|
 | :x:					| Define / Let			| :=	| x := 3, $x	| 3			|

@@ -88,7 +88,9 @@ INCLUDES = [
     '<iostream>',
     '"src/parser/tokens.h"',
     '"src/types/types.h"',
-    '"src/type_definitions.h"'
+    '"src/type_definitions.h"',
+    '"src/parser/expression.h"',
+    '"src/parser/phrase.h"'
     ]
 
 TYPES = {
@@ -97,7 +99,7 @@ TYPES = {
     'int': ['SN_int'],
     'rational': ['Rational'],
     'real': ['SN_real'],
-    'string': ['std::string'],
+    'string': ['std::wstring'],
     'set': ['Set'],
 
     'default': ['auto'],
