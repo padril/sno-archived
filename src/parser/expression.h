@@ -23,17 +23,12 @@ class Expression {
     Phrase phrase;
     Literal execute(/*IdentifierList& scope*/);
 
-
-    static Phrase parse(const std::wstring& str);
+    // TODO(padril): make int* pos into an iterator
+    static Phrase parse(const std::wstring& str, int* pos);
 
  private:
     // Attributes
     std::wstring text;
-
-
-    // Parsing
-    static Literal parse_literal(const std::wstring& str, int* pos);
-    static Literal parse_set(const std::wstring& str, int* pos);
 };
 
 

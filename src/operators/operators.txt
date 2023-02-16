@@ -1,6 +1,6 @@
 representation (arg)
     override string:
-        std::wcout << L'"' + arg + L'"';
+        std::wcout << L'"' + arg + L'"' + L'\n';
         return arg;
     override set:
         std::visit([](auto x) {std::wcout << x << '\n'; }, arg);
@@ -22,7 +22,8 @@ print (arg)
 
 debug_print (arg)
     string:
-        Phrase p = Expression::parse(arg);
+        int t = 0;
+        Phrase p = Expression::parse(arg, &t);
         std::wcout << p.tree();
         return arg;
 

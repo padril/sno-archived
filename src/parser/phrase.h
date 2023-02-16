@@ -54,8 +54,20 @@ struct Node {
             return { {repr}, repr.size() / 2 };
         }
         else if (left == nullptr && right != nullptr) {
-            // TODO(padril): implement, but also need to get tree to function
-            //               with monads first
+            Screen m = right->display();
+            size_t mh = m.screen.size(); size_t mw = m.screen[0].size();
+            size_t maxw = std::max(repr.size(), mw);
+
+            std::vector<std::wstring> ret(mh + 2);
+
+            ret[0] += std::wstring(maxw - mw, L' ') + repr;
+            ret[1] += std::wstring(maxw - mw, L' ')
+                + L'│' + std::wstring(repr.size() - 1, L' ');
+            for (int i = 0; i < mh; ++i) {
+                ret[i + 2] += m.screen[i];
+            }
+
+            return { ret, maxw - mw };
         }
         else if (left != nullptr && right != nullptr) {
             Screen l = left->display();
@@ -77,7 +89,7 @@ struct Node {
             }
 
             // middle
-            ret[0] += static_cast<std::wstring>(repr);
+            ret[0] += repr;
             ret[1] += L'┴' + std::wstring(repr.size() - 1, L'─');
             for (int i = 0; i < mh; ++i) {
                 ret[i + 2] += std::wstring(repr.size(), L' ');
@@ -113,8 +125,7 @@ struct Node {
 
 
 struct Phrase {
-    std::list<Token> tokens;
-    std::list<Literal> literals;
+    std::list<Node*> nodes;
 
     Node* tree();
 

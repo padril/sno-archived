@@ -19,6 +19,7 @@ int main() {
             break;
         }
         Expression p = Expression(string);
+        std::wcout << p.phrase.tree();
         OPERATOR_REPRESENTATION(Null(), p.phrase.evaluate());
     }
 

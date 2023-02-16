@@ -11,85 +11,63 @@ std::vector<std::set<Token>> ORDER_OF_OPERATIONS = {
 };
 
 
-void create_subtree(std::list<Node*>::iterator begin, std::list<Node*>::iterator end,
+
+
+void subtree(std::list<Node*>::iterator begin,
+    std::list<Node*>::iterator end,
     std::list<Node*>* nodes) {
-    // Non-parentheses
-    for (std::set<Token> operations : ORDER_OF_OPERATIONS) {
-        for (std::list<Node*>::iterator node = std::next(begin);
-            node != end; ++node) {
-            if (operations.find((*node)->token) != operations.end()) {
-                auto prev = std::prev(node);
-                auto next = std::next(node);
-                (*node)->left = *prev; (*node)->right = *next;
-                nodes->erase(next);
-                nodes->erase(prev);
+    using enum Token;
+
+    // parens -> tree
+    std::stack<std::list<Node*>::iterator> prio;
+    for (auto i = std::next(begin); i != end; ++i) {
+        if ((*i)->token == BEGIN_PRIORITY) {
+            prio.push(i);
+        } else if ((*i)->token == END_PRIORITY) {
+            auto begin_prio = prio.top();
+            auto end_prio = i;
+            // we do this weird ++i --i dance to keep the iterator valid
+            ++i;
+            subtree(begin_prio, end_prio, nodes);
+            delete (*begin_prio); delete(*end_prio);
+            nodes->erase(begin_prio); nodes->erase(end_prio);
+            prio.pop();
+            --i;
+        }
+    }
+
+    // L to R, groups pull in left nodes
+    for (auto operations : ORDER_OF_OPERATIONS) {
+        for (auto i = std::next(begin); i != end; ++i) {
+            if (operations.contains((*i)->token)) {
+                auto j = i;
+                while ((*j)->token != LITERAL && (*j)->right == nullptr) {
+                    ++j;
+                }
+                --j;
+                while (j != i) {
+                    (*j)->right = *std::next(j);
+                    nodes->erase(std::next(j));
+                    --j;
+                }
+                (*i)->right = *std::next(i);
+                nodes->erase(std::next(i));
+                if ((*i)->left == nullptr
+                    && ((*std::prev(i))->token == LITERAL
+                        || (*std::prev(i))->right != nullptr)) {
+                    (*i)->left = *std::prev(i);
+                    nodes->erase(std::prev(i));
+                }
             }
         }
     }
 }
 
-void create_tree(std::list<Node*>* nodes) {
-    // This function looks messy because of all of the pointers,
-    // but it really isn't that bad. Maybe refactor to use less
-    // pointers, or use unique_ptr in the future but! good for now
-    using enum Token;
-
-
-    auto begin = nodes->begin();
-    auto end = nodes->end();
-
-    // Use a stack to figure out parentheses order
-    // initialize it with the entire phrase
-    std::stack<std::list<Node*>::iterator> stack;
-    // Don't increment node here, so that we can choose when, and not
-    // invalidate iterators
-    for (std::list<Node*>::iterator node = begin; node != end;) {
-        if ((*node)->token == BEGIN_PRIORITY) {
-            stack.push(node);
-            ++node;
-        } else if ((*node)->token == END_PRIORITY) {
-            auto subbegin = stack.top();
-            auto subend = node;
-            ++node;
-            create_subtree(subbegin, subend, nodes);
-            delete(*subbegin); delete(*subend);
-            nodes->erase(subbegin); nodes->erase(subend);
-            stack.pop();
-        }
-        else {
-            ++node;
-        }
-    }
-}
-
-
-Node* Phrase::tree() {
-    using enum Token;
-    std::list<Node*> nodes;
-
-    auto current_literal = literals.begin();
-    Literal value;
-
-    nodes.push_back(new Node{ BEGIN_PRIORITY });
-    for (Token token : tokens) {
-        if (token == LITERAL) {
-            value = *current_literal;
-            ++current_literal;
-        }
-        else {
-            value = Literal(Null{});
-        }
-        nodes.push_back(new Node{ token, value });
-    }
-    nodes.push_back(new Node{ END_PRIORITY });
-
-    create_tree(&nodes);
-
-    return nodes.front();
-}
-
 Literal subevaluate(Node* head) {
     using enum Token;
+    if (head == nullptr) {
+        return Null();
+    }
 
     switch (head->token) {
     case LITERAL:
@@ -116,7 +94,23 @@ Literal subevaluate(Node* head) {
     }
 }
 
+
+Node* Phrase::tree() {
+    std::list<Node*> local_nodes;
+    for (auto node : nodes) {
+        local_nodes.push_back(new Node{node->token, node->value});
+    }
+    local_nodes.push_front(new Node{ Token::BEGIN_PHRASE, Null() });
+    local_nodes.push_back(new Node{ Token::END_PHRASE, Null() });
+    subtree(local_nodes.begin(), --local_nodes.end(), &local_nodes);
+    delete(local_nodes.front()); delete(local_nodes.back());
+    local_nodes.pop_front(); local_nodes.pop_back();
+    return local_nodes.front();
+}
+
+
 Literal Phrase::evaluate(bool terminating) {
     Node* head = tree();
-    return subevaluate(head);
+    Literal ret = subevaluate(head);
+    return ret;
 }

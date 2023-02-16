@@ -7,7 +7,7 @@
 struct OPERATOR_REPRESENTATION_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
 	Literal operator()(Null, std::wstring arg) {
-		std::wcout << L'"' + arg + L'"';
+		std::wcout << L'"' + arg + L'"' + L'\n';
 		return arg;
 	}
 	
@@ -53,7 +53,8 @@ Literal OPERATOR_PRINT(Literal l, Literal r) {
 struct OPERATOR_DEBUG_PRINT_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
 	Literal operator()(Null, std::wstring arg) {
-		Phrase p = Expression::parse(arg);
+		int t = 0;
+		Phrase p = Expression::parse(arg, &t);
 		std::wcout << p.tree();
 		return arg;
 	}
