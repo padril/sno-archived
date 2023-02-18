@@ -9,6 +9,7 @@
 enum class Token : SN_token {
     BEGIN_PHRASE = 'B',
     END_PHRASE = 'E',
+    EMPTY = 'N',
 
     BEGIN_PRIORITY = '(',
     END_PRIORITY = ')',

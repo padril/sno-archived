@@ -18,6 +18,7 @@ void subtree(std::list<Node*>::iterator begin,
     std::list<Node*>* nodes) {
     using enum Token;
 
+    // breaks when parens start it -.-
     // parens -> tree
     std::stack<std::list<Node*>::iterator> prio;
     for (auto i = std::next(begin); i != end; ++i) {
@@ -34,6 +35,10 @@ void subtree(std::list<Node*>::iterator begin,
             prio.pop();
             --i;
         }
+    }
+
+    if (nodes->size() <= 3) {
+        return;
     }
 
     // L to R, groups pull in left nodes
@@ -100,12 +105,12 @@ Node* Phrase::tree() {
     for (auto node : nodes) {
         local_nodes.push_back(new Node{node->token, node->value});
     }
-    local_nodes.push_front(new Node{ Token::BEGIN_PHRASE, Null() });
-    local_nodes.push_back(new Node{ Token::END_PHRASE, Null() });
+    local_nodes.push_front(new Node{ Token::BEGIN_PHRASE});
+    local_nodes.push_back(new Node{ Token::END_PHRASE});
     subtree(local_nodes.begin(), --local_nodes.end(), &local_nodes);
     delete(local_nodes.front()); delete(local_nodes.back());
     local_nodes.pop_front(); local_nodes.pop_back();
-    return local_nodes.front();
+    return local_nodes.size() ? local_nodes.front() : new Node{Token::EMPTY};
 }
 
 
