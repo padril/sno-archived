@@ -1,7 +1,7 @@
 ﻿// Copyright 2023 Leo James Peckham
 
-#include "src/parser/expression.h"
 #include "src/operators/operators.h"
+#include "src/parser/lexer.h"
 
 #include <io.h>     // Permits us to use
 #include <fcntl.h>  // unicode
@@ -19,7 +19,6 @@ int main() {
             break;
         }
         Expression p = Expression(string);
-        std::wcout << p.phrase.tree();
         OPERATOR_REPRESENTATION(Null(), p.phrase.evaluate());
     }
 

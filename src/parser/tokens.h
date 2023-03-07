@@ -4,20 +4,25 @@
 #include <string>
 #include <variant>
 #include <numeric>
+#include <optional>
 #include "src/types/set.h"
+#include "src/types/types.h"
 
-enum class Token : SN_token {
+enum class TokenID : SN_token {
     BEGIN_PHRASE = 'B',
     END_PHRASE = 'E',
-    EMPTY = 'N',
+    EMPTY = 'X',
+
 
     BEGIN_PRIORITY = '(',
     END_PRIORITY = ')',
     BEGIN_SET = '{',
     END_SET = '}',
 
+    STRING = 'S',
     LITERAL = 'L',
 
+    SYMBOL,
     PLUS = '+',
     MINUS = '-',
     TIMES = '*',
@@ -26,6 +31,12 @@ enum class Token : SN_token {
     DEBUG_PRINT = ';$',
 };
 
-std::wstring token_to_string(Token token);
+struct Token {
+    TokenID id;
+    std::optional<Literal> value;
+};
+
+std::wstring token_id_to_string(TokenID token);
+TokenID string_to_token_id(std::wstring string);
 
 #endif // SRC_TOKENS_H_

@@ -4,29 +4,27 @@
 #include "src/operators/operators.h"
 
 
-std::vector<std::set<Token>> ORDER_OF_OPERATIONS = {
-    {Token::PRINT},
-    {Token::TIMES, Token::SLASH},
-    {Token::PLUS, Token::MINUS},
+std::vector<std::set<TokenID>> ORDER_OF_OPERATIONS = {
+    {TokenID::TIMES, TokenID::SLASH},
+    {TokenID::PLUS, TokenID::MINUS},
+    {TokenID::PRINT, TokenID::DEBUG_PRINT},
 };
-
-
 
 
 void subtree(std::list<Node*>::iterator begin,
     std::list<Node*>::iterator end,
     std::list<Node*>* nodes) {
-    using enum Token;
+    using enum TokenID;
 
-    // breaks when parens start it -.-
     // parens -> tree
     std::stack<std::list<Node*>::iterator> prio;
     for (auto i = std::next(begin); i != end; ++i) {
-        if ((*i)->token == BEGIN_PRIORITY) {
+        if ((*i)->token.id == BEGIN_PRIORITY) {
             prio.push(i);
-        } else if ((*i)->token == END_PRIORITY) {
+        } else if ((*i)->token.id == END_PRIORITY) {
             auto begin_prio = prio.top();
             auto end_prio = i;
+            // TODO(padril): there's definitely a better way to do that
             // we do this weird ++i --i dance to keep the iterator valid
             ++i;
             subtree(begin_prio, end_prio, nodes);
@@ -44,9 +42,9 @@ void subtree(std::list<Node*>::iterator begin,
     // L to R, groups pull in left nodes
     for (auto operations : ORDER_OF_OPERATIONS) {
         for (auto i = std::next(begin); i != end; ++i) {
-            if (operations.contains((*i)->token)) {
+            if (operations.contains((*i)->token.id)) {
                 auto j = i;
-                while ((*j)->token != LITERAL && (*j)->right == nullptr) {
+                while ((*j)->token.id != LITERAL && (*j)->right == nullptr) {
                     ++j;
                 }
                 --j;
@@ -58,7 +56,7 @@ void subtree(std::list<Node*>::iterator begin,
                 (*i)->right = *std::next(i);
                 nodes->erase(std::next(i));
                 if ((*i)->left == nullptr
-                    && ((*std::prev(i))->token == LITERAL
+                    && ((*std::prev(i))->token.id == LITERAL
                         || (*std::prev(i))->right != nullptr)) {
                     (*i)->left = *std::prev(i);
                     nodes->erase(std::prev(i));
@@ -69,14 +67,14 @@ void subtree(std::list<Node*>::iterator begin,
 }
 
 Literal subevaluate(Node* head) {
-    using enum Token;
+    using enum TokenID;
     if (head == nullptr) {
         return Null();
     }
 
-    switch (head->token) {
+    switch (head->token.id) {
     case LITERAL:
-        return head->value;
+        return *head->token.value;
     case PLUS:
         return OPERATOR_PLUS(subevaluate(head->left),
             subevaluate(head->right));
@@ -86,7 +84,6 @@ Literal subevaluate(Node* head) {
     case TIMES:
         return OPERATOR_TIMES(subevaluate(head->left),
             subevaluate(head->right));
-        break;
     case SLASH:
         return OPERATOR_SLASH(subevaluate(head->left),
             subevaluate(head->right));
@@ -103,14 +100,14 @@ Literal subevaluate(Node* head) {
 Node* Phrase::tree() {
     std::list<Node*> local_nodes;
     for (auto node : nodes) {
-        local_nodes.push_back(new Node{node->token, node->value});
+        local_nodes.push_back(new Node{node->token});
     }
-    local_nodes.push_front(new Node{ Token::BEGIN_PHRASE});
-    local_nodes.push_back(new Node{ Token::END_PHRASE});
+    local_nodes.push_front(new Node{ {TokenID::BEGIN_PHRASE, std::nullopt } });
+    local_nodes.push_back(new Node{ {TokenID::END_PHRASE, std::nullopt } });
     subtree(local_nodes.begin(), --local_nodes.end(), &local_nodes);
     delete(local_nodes.front()); delete(local_nodes.back());
     local_nodes.pop_front(); local_nodes.pop_back();
-    return local_nodes.size() ? local_nodes.front() : new Node{Token::EMPTY};
+    return local_nodes.size() ? local_nodes.front() : new Node{ { TokenID::EMPTY, std::nullopt } };
 }
 
 

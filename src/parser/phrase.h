@@ -18,7 +18,6 @@
 // TODO(padril): move node into a .h .cpp thing
 struct Node {
     Token token;
-    Literal value;  // use optional here in the future
     Node* left = nullptr;
     Node* right = nullptr;
 
@@ -49,7 +48,7 @@ struct Node {
     Screen display() {
         Screen left_block, right_block;
         std::wstring repr;
-        repr = token_to_string(token);
+        repr = token_id_to_string(token.id);
         if (left == nullptr && right == nullptr) {
             return { {repr}, repr.size() / 2 };
         }

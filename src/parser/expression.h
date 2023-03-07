@@ -9,14 +9,14 @@
 
 
 class Expression {
- public:
+public:
+
     // Constructors
     Expression();
     explicit Expression(const std::wstring& _text);
     explicit Expression(const wchar_t* _text);
     ~Expression();
 
-    
     // Public Members
     std::wstring to_latex();
     Phrase get_phrase();
@@ -26,7 +26,8 @@ class Expression {
     // TODO(padril): make int* pos into an iterator
     static Phrase parse(const std::wstring& str, int* pos);
 
- private:
+private:
+
     // Attributes
     std::wstring text;
 };

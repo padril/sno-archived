@@ -10,13 +10,14 @@
 #include "set.h"
 
 enum class Type {
-    LITERAL_NULL,
-    LITERAL_BOOL,
-    LITERAL_INT,
-    LITERAL_RATIONAL,
-    LITERAL_REAL,
-    LITERAL_STRING,
-    LITERAL_SET,
+    null,
+    error,
+    boolean,
+    integer,
+    rational,
+    real,
+    string,
+    set,
 };
 
 typedef std::variant<
@@ -27,7 +28,7 @@ typedef std::variant<
 
 typedef std::variant<
     Null, 
-    SN_bool, 
+    SN_bool,
     SN_int,
     Rational, 
     SN_real, 

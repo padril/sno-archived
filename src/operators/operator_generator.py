@@ -34,12 +34,12 @@ override: if a specific type combination is to be defined later, prevents
           e.g: in `override real: do something; numeric: do something else;`
                numeric does not create a definition for reals.
 each: in a dyadic operator, mirrors the code for each permutation of types
-TODO: set[type]: overrides how sets work
 promote: (dyadic) promote both types to their greatest common type
                before operation
                e.g: `promote int, float: x + y` is equivalent to
                     `int, float: (float) x + y`
 
+TODO: set[type]: overrides how sets work (MIGHT NOT BE NECESSARY)
 TODO: something to reduce 'return arg' usage
 TODO: comment everything
 TODO: error handeling
