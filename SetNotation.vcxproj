@@ -132,7 +132,7 @@
   <ItemGroup>
     <ClInclude Include="base.h" />
     <ClInclude Include="src\parser\lexer.h" />
-    <ClInclude Include="src\parser\expression.h" />
+    <ClInclude Include="src\parser\sentence.h" />
     <ClInclude Include="src\operators\operators.h" />
     <ClInclude Include="src\type_definitions.h" />
     <ClInclude Include="src\types\types.h" />
@@ -148,7 +148,7 @@
     <ClCompile Include="src\operators\operators.cpp" />
     <ClCompile Include="src\parser\phrase.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\parser\expression.cpp" />
+    <ClCompile Include="src\parser\sentence.cpp" />
     <ClCompile Include="src\parser\tokens.cpp" />
     <ClCompile Include="src\types\rational.cpp" />
   </ItemGroup>

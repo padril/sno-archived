@@ -54,7 +54,7 @@ struct OPERATOR_DEBUG_PRINT_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
 	Literal operator()(Null, std::wstring arg) {
 		int t = 0;
-		Phrase p = Expression::parse(arg, &t);
+		Phrase p = Sentence::parse(arg, &t);
 		std::wcout << p.tree();
 		return arg;
 	}

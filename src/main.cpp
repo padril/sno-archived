@@ -18,10 +18,10 @@ int main() {
         if (string == L"exit") {
             break;
         }
-        Expression p = Expression(string);
+        Sentence p = Sentence(string);
         OPERATOR_REPRESENTATION(Null(), p.phrase.evaluate());
     }
 
-    //Phrase p = Expression::parse(L"4 / (3) + 2");
+    //Phrase p = Sentence::parse(L"4 / (3) + 2");
     //std::wcout << p.tree();
 }

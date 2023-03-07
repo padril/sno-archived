@@ -23,7 +23,7 @@ print (arg)
 debug_print (arg)
     string:
         int t = 0;
-        Phrase p = Expression::parse(arg, &t);
+        Phrase p = Sentence::parse(arg, &t);
         std::wcout << p.tree();
         return arg;
 
