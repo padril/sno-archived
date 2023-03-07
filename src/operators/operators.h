@@ -6,10 +6,10 @@
 
 
 #include <iostream>
-#include "src/parser/tokens.h"
+#include "src/lexer/tokens.h"
 #include "src/types/types.h"
 #include "src/type_definitions.h"
-#include "src/parser/expression.h"
+#include "src/lexer/sentence.h"
 #include "src/parser/phrase.h"
 
 

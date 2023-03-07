@@ -1,20 +1,16 @@
 // Copyright 2023 Leo Peckham
 
+
 #ifndef SRC_PARSER_EXPRESSION_H_
 #define SRC_PARSER_EXPRESSION_H_
 
 
-
-
-// ===
-// INCLUDES
-// ===
-
-
 #include "src/parser/phrase.h"
-#include "src/parser/lexer.h"
+#include "src/lexer/lexeme.h"
+#include "src/lexer/tokens.h"
 
 
+namespace lexer {
 
 
 // ===
@@ -47,6 +43,6 @@ private:
 };
 
 
-
+}  // namespace lexer
 
 #endif  // SRC_EXPRESSION_H_

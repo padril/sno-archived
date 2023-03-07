@@ -1,11 +1,7 @@
 // Copyright 2023 Leo James Peckham
 
 
-#include "src/parser/expression.h"
-#include "src/operators/operators.h"
-#include <optional>
-
-
+#include "src/lexer/sentence.h"
 
 
 // ===
@@ -13,15 +9,13 @@
 // ===
 
 
-Sentence::Sentence(const std::wstring& str) {
+lexer::Sentence::Sentence(const std::wstring& str) {
     text = str;
     int t = 0;;
 }
 
 
-Sentence::~Sentence() {}
-
-
+lexer::Sentence::~Sentence() {}
 
 
 // ===
@@ -29,7 +23,7 @@ Sentence::~Sentence() {}
 // ===
 
 
-Phrase Sentence::parse() {
+Phrase lexer::Sentence::parse() {
     if (text.size() == 0) {
         return {};
     }

@@ -1,7 +1,7 @@
 ﻿// Copyright 2023 Leo James Peckham
 
 #include "src/operators/operators.h"
-#include "src/parser/lexer.h"
+#include "src/lexer/lexeme.h"
 
 #include <io.h>     // Permits us to use
 #include <fcntl.h>  // unicode
@@ -18,8 +18,9 @@ int main() {
         if (string == L"exit") {
             break;
         }
-        Sentence p = Sentence(string);
-        OPERATOR_REPRESENTATION(Null(), p.phrase.evaluate());
+        lexer::Sentence s(string);
+        Phrase p = s.parse();
+        OPERATOR_REPRESENTATION(Null(), p.evaluate());
     }
 
     //Phrase p = Sentence::parse(L"4 / (3) + 2");

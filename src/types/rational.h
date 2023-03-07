@@ -14,19 +14,19 @@ class Rational {
  public:
     // Constructors
     // TODO(padril): declare explicit and do conversions in operator_generator
-    Rational(SN_int p = 0, SN_int q = 1);
+    Rational(set_type::integer p = 0, set_type::integer q = 1);
     ~Rational();
 
 
     // Public Methods
-    SN_int numerator();
-    SN_int denominator();
-    void set(SN_int p = 0, SN_int q = 1);
+    set_type::integer numerator();
+    set_type::integer denominator();
+    void set(set_type::integer p = 0, set_type::integer q = 1);
 
 
     // Conversion
-    explicit operator SN_int() const;
-    explicit operator SN_real() const;
+    explicit operator set_type::integer() const;
+    explicit operator set_type::real() const;
 
 
     // Operators
@@ -38,7 +38,7 @@ class Rational {
     friend Rational operator/(const Rational& x, const Rational& y);
 
     auto operator<=>(const Rational& x) const {
-        return SN_real(*this) - SN_real(x);
+        return set_type::real(*this) - set_type::real(x);
     }
 
     friend std::wostream& operator<<(std::wostream& out, const Rational& x);
@@ -46,8 +46,8 @@ class Rational {
 
  private:
     // Attributes
-    SN_int num;
-    SN_int den;
+    set_type::integer num;
+    set_type::integer den;
 };
 
 

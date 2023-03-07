@@ -1,5 +1,9 @@
+// Copyright 2023 Leo Peckham
+
+
 #ifndef SRC_TYPES_LITERAL_H_
 #define SRC_TYPES_LITERAL_H_
+
 
 #include <variant>
 #include <string>
@@ -8,6 +12,7 @@
 #include "nulltype.h"
 #include "rational.h"
 #include "set.h"
+
 
 enum class Type {
     null,
@@ -20,20 +25,23 @@ enum class Type {
     set,
 };
 
+
 typedef std::variant<
-    TemplateSet<SN_int>,
+    TemplateSet<set_type::integer>,
     TemplateSet<Rational>,
-    TemplateSet<SN_real>
+    TemplateSet<set_type::real>
 > Set;
+
 
 typedef std::variant<
     Null, 
-    SN_bool,
-    SN_int,
+    set_type::boolean,
+    set_type::integer,
     Rational, 
-    SN_real, 
+    set_type::real, 
     std::wstring,
     Set
     > Literal;
+
 
 #endif  // SRC_TYPES_LITERAL_H_

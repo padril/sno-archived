@@ -52,7 +52,7 @@ times (x, y)
 
 GENERATES:
 struct OPERATOR_TIMES_PACKAGE {
-    Literal operator(SN_int x_, SN_float y_) {
+    Literal operator(set_type::integer x_, SN_float y_) {
         SN_float x = static_cast<SN_float>(x_)
         x * y;
     }
@@ -97,20 +97,20 @@ INCLUDES = [
 TYPES = {
     'null': ['Null'],
     'bool': ['SN_bool'],
-    'int': ['SN_int'],
+    'int': ['set_type::integer'],
     'rational': ['Rational'],
-    'real': ['SN_real'],
+    'real': ['set_type::real'],
     'string': ['std::wstring'],
     'set': ['Set'],
 
     'default': ['auto'],
-    'numeric': ['SN_int', 'Rational', 'SN_real'],
+    'numeric': ['set_type::integer', 'Rational', 'set_type::real'],
     }
 
 PROMOTE_ORDER = (
-    'SN_int',
+    'set_type::integer',
     'Rational',
-    'SN_real',
+    'set_type::real',
     )
 
 KEYWORDS = [

@@ -1,13 +1,26 @@
+// Copyright 2023 Leo Peckham
+
+
 #ifndef SRC_TYPE_DEFINITIONS_H_
 #define SRC_TYPE_DEFINITIONS_H_
 
+
+#include <stdint.h>
+
+
 // Types used across the entire project.
 
-typedef long    SN_int;
-typedef bool    SN_bool;
-typedef double  SN_real;
 
-typedef uint16_t SN_token;
+namespace set_type {
 
+
+typedef long    integer;
+typedef bool    boolean;
+typedef double  real;
+
+typedef uint16_t token;
+
+
+}
 
 #endif  // SRC_TYPES_DEFINITONS_H_
