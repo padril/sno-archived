@@ -7,9 +7,9 @@
 #include <fcntl.h>  // unicode
 
 int main() {
-
-    _setmode(_fileno(stdout), _O_WTEXT);
-    _setmode(_fileno(stdin), _O_WTEXT);
+    
+    (void) _setmode(_fileno(stdout), _O_WTEXT);
+    (void) _setmode(_fileno(stdin), _O_WTEXT);
 
     std::wstring string = L"";
     while (true) {
