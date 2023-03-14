@@ -85,7 +85,7 @@ False	(Note: It would show a probability
 | :x:					| Default variant		| ;		| 1 ;= 2		| False		|
 | :x:					| Over/Between (axis)	| _		| 0_+[1 2 3]	| []		|
 | :x:					| Set default over		| =_	| =_ 0			|			|
-| :x:					| Default over			| _		| _+[1 2 3]
+| :x:					| Default over			| _		| _+[1 2 3]		|			|
 |						| **DATA**				|		|				|			|
 | :heavy_check_mark:	| Rational				| /		| 1/2			|			|
 | :heavy_check_mark:	| Decimal				| .		| 1.3			|			|

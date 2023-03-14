@@ -19,7 +19,7 @@ std::wstring token_id_to_string(TokenID token_id) {
 TokenID string_to_token_id(std::wstring str) {
     set_type::token t = 0;
     for (size_t i = 0; i < str.size(); ++i) {
-        t += static_cast<set_type::token>(str[i]) * pow(16, i);
+        t |= static_cast<set_type::token>(str[i]) << (8 * (str.size() - i - 1));
     }
     return TokenID(t);
 }

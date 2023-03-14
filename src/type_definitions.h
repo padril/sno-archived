@@ -18,7 +18,7 @@ typedef long    integer;
 typedef bool    boolean;
 typedef double  real;
 
-typedef uint16_t token;
+typedef uint32_t token;
 
 
 }

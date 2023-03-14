@@ -4,18 +4,20 @@
 #include "src/lexer/sentence.h"
 
 
+namespace lexer {
+
 // ===
 // Constructors
 // ===
 
 
-lexer::Sentence::Sentence(const std::wstring& str) {
+Sentence::Sentence(const std::wstring& str) {
     text = str;
     int t = 0;;
 }
 
 
-lexer::Sentence::~Sentence() {}
+Sentence::~Sentence() {}
 
 
 // ===
@@ -23,14 +25,14 @@ lexer::Sentence::~Sentence() {}
 // ===
 
 
-Phrase lexer::Sentence::parse() {
+Phrase Sentence::parse() {
     if (text.size() == 0) {
         return {};
     }
 
     using enum TokenID;
     std::list<Node*> nodes;
-    std::list<Token> tokens = lexer::evaluate(lexer::scan(text));
+    std::list<Token> tokens = evaluate(scan(text));
 
     for (Token t : tokens) {
         Node* node = new Node{t};  // can throw InvalidToken
@@ -39,3 +41,6 @@ Phrase lexer::Sentence::parse() {
 
     return {nodes};
 }
+
+
+}  // namespace lexer

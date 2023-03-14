@@ -20,7 +20,13 @@ int main() {
         }
         lexer::Sentence s(string);
         Phrase p = s.parse();
-        OPERATOR_REPRESENTATION(Null(), p.evaluate());
+        if (p.nodes.front()->token.id != lexer::string_to_token_id(L"$") &&
+            p.nodes.front()->token.id != lexer::string_to_token_id(L";$") ) {
+            OPERATOR_REPRESENTATION(Null(), p.evaluate());
+        }
+        else {
+            p.evaluate();
+        }
     }
 
     //Phrase p = Sentence::parse(L"4 / (3) + 2");
