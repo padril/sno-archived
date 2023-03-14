@@ -1,12 +1,10 @@
 // Copyright 2023 Leo James Peckham
 
 
-#include "src/parser/expression.h"
-#include "src/operators/operators.h"
-#include <optional>
+#include "src/lexer/sentence.h"
 
 
-
+namespace lexer {
 
 // ===
 // Constructors
@@ -22,8 +20,6 @@ Sentence::Sentence(const std::wstring& str) {
 Sentence::~Sentence() {}
 
 
-
-
 // ===
 // Public Members
 // ===
@@ -36,7 +32,7 @@ Phrase Sentence::parse() {
 
     using enum TokenID;
     std::list<Node*> nodes;
-    std::list<Token> tokens = lexer::evaluate(lexer::scan(text));
+    std::list<Token> tokens = evaluate(scan(text));
 
     for (Token t : tokens) {
         Node* node = new Node{t};  // can throw InvalidToken
@@ -45,3 +41,6 @@ Phrase Sentence::parse() {
 
     return {nodes};
 }
+
+
+}  // namespace lexer
