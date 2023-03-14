@@ -53,8 +53,8 @@ Literal OPERATOR_PRINT(Literal l, Literal r) {
 struct OPERATOR_DEBUG_PRINT_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
 	Literal operator()(Null, std::wstring arg) {
-		int t = 0;
-		Phrase p = Expression::parse(arg, &t);
+		lexer::Sentence s(arg);
+		Phrase p = s.parse();
 		std::wcout << p.tree();
 		return arg;
 	}
@@ -67,7 +67,7 @@ Literal OPERATOR_DEBUG_PRINT(Literal l, Literal r) {
 
 struct OPERATOR_PLUS_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
-	Literal operator()(Null, SN_int x) {
+	Literal operator()(Null, set_type::integer x) {
 		return +x;
 	}
 	
@@ -75,25 +75,25 @@ struct OPERATOR_PLUS_PACKAGE {
 		return +x;
 	}
 	
-	Literal operator()(Null, SN_real x) {
+	Literal operator()(Null, set_type::real x) {
 		return +x;
 	}
 	
-	Literal operator()(SN_int x, SN_int y) {
+	Literal operator()(set_type::integer x, set_type::integer y) {
 		return x + y;
 	}
 	
-	Literal operator()(SN_int x_, Rational y) {
+	Literal operator()(set_type::integer x_, Rational y) {
 		Rational x = static_cast<Rational>(x_);
 		return x + y;
 	}
 	
-	Literal operator()(SN_int x_, SN_real y) {
-		SN_real x = static_cast<SN_real>(x_);
+	Literal operator()(set_type::integer x_, set_type::real y) {
+		set_type::real x = static_cast<set_type::real>(x_);
 		return x + y;
 	}
 	
-	Literal operator()(Rational x, SN_int y_) {
+	Literal operator()(Rational x, set_type::integer y_) {
 		Rational y = static_cast<Rational>(y_);
 		return x + y;
 	}
@@ -102,22 +102,22 @@ struct OPERATOR_PLUS_PACKAGE {
 		return x + y;
 	}
 	
-	Literal operator()(Rational x_, SN_real y) {
-		SN_real x = static_cast<SN_real>(x_);
+	Literal operator()(Rational x_, set_type::real y) {
+		set_type::real x = static_cast<set_type::real>(x_);
 		return x + y;
 	}
 	
-	Literal operator()(SN_real x, SN_int y_) {
-		SN_real y = static_cast<SN_real>(y_);
+	Literal operator()(set_type::real x, set_type::integer y_) {
+		set_type::real y = static_cast<set_type::real>(y_);
 		return x + y;
 	}
 	
-	Literal operator()(SN_real x, Rational y_) {
-		SN_real y = static_cast<SN_real>(y_);
+	Literal operator()(set_type::real x, Rational y_) {
+		set_type::real y = static_cast<set_type::real>(y_);
 		return x + y;
 	}
 	
-	Literal operator()(SN_real x, SN_real y) {
+	Literal operator()(set_type::real x, set_type::real y) {
 		return x + y;
 	}
 	
@@ -133,7 +133,7 @@ Literal OPERATOR_PLUS(Literal l, Literal r) {
 
 struct OPERATOR_MINUS_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
-	Literal operator()(Null, SN_int x) {
+	Literal operator()(Null, set_type::integer x) {
 		return -x;
 	}
 	
@@ -141,25 +141,25 @@ struct OPERATOR_MINUS_PACKAGE {
 		return -x;
 	}
 	
-	Literal operator()(Null, SN_real x) {
+	Literal operator()(Null, set_type::real x) {
 		return -x;
 	}
 	
-	Literal operator()(SN_int x, SN_int y) {
+	Literal operator()(set_type::integer x, set_type::integer y) {
 		return x - y;
 	}
 	
-	Literal operator()(SN_int x_, Rational y) {
+	Literal operator()(set_type::integer x_, Rational y) {
 		Rational x = static_cast<Rational>(x_);
 		return x - y;
 	}
 	
-	Literal operator()(SN_int x_, SN_real y) {
-		SN_real x = static_cast<SN_real>(x_);
+	Literal operator()(set_type::integer x_, set_type::real y) {
+		set_type::real x = static_cast<set_type::real>(x_);
 		return x - y;
 	}
 	
-	Literal operator()(Rational x, SN_int y_) {
+	Literal operator()(Rational x, set_type::integer y_) {
 		Rational y = static_cast<Rational>(y_);
 		return x - y;
 	}
@@ -168,22 +168,22 @@ struct OPERATOR_MINUS_PACKAGE {
 		return x - y;
 	}
 	
-	Literal operator()(Rational x_, SN_real y) {
-		SN_real x = static_cast<SN_real>(x_);
+	Literal operator()(Rational x_, set_type::real y) {
+		set_type::real x = static_cast<set_type::real>(x_);
 		return x - y;
 	}
 	
-	Literal operator()(SN_real x, SN_int y_) {
-		SN_real y = static_cast<SN_real>(y_);
+	Literal operator()(set_type::real x, set_type::integer y_) {
+		set_type::real y = static_cast<set_type::real>(y_);
 		return x - y;
 	}
 	
-	Literal operator()(SN_real x, Rational y_) {
-		SN_real y = static_cast<SN_real>(y_);
+	Literal operator()(set_type::real x, Rational y_) {
+		set_type::real y = static_cast<set_type::real>(y_);
 		return x - y;
 	}
 	
-	Literal operator()(SN_real x, SN_real y) {
+	Literal operator()(set_type::real x, set_type::real y) {
 		return x - y;
 	}
 };
@@ -195,21 +195,21 @@ Literal OPERATOR_MINUS(Literal l, Literal r) {
 
 struct OPERATOR_TIMES_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
-	Literal operator()(SN_int x, SN_int y) {
+	Literal operator()(set_type::integer x, set_type::integer y) {
 		return x * y;
 	}
 	
-	Literal operator()(SN_int x_, Rational y) {
+	Literal operator()(set_type::integer x_, Rational y) {
 		Rational x = static_cast<Rational>(x_);
 		return x * y;
 	}
 	
-	Literal operator()(SN_int x_, SN_real y) {
-		SN_real x = static_cast<SN_real>(x_);
+	Literal operator()(set_type::integer x_, set_type::real y) {
+		set_type::real x = static_cast<set_type::real>(x_);
 		return x * y;
 	}
 	
-	Literal operator()(Rational x, SN_int y_) {
+	Literal operator()(Rational x, set_type::integer y_) {
 		Rational y = static_cast<Rational>(y_);
 		return x * y;
 	}
@@ -218,22 +218,22 @@ struct OPERATOR_TIMES_PACKAGE {
 		return x * y;
 	}
 	
-	Literal operator()(Rational x_, SN_real y) {
-		SN_real x = static_cast<SN_real>(x_);
+	Literal operator()(Rational x_, set_type::real y) {
+		set_type::real x = static_cast<set_type::real>(x_);
 		return x * y;
 	}
 	
-	Literal operator()(SN_real x, SN_int y_) {
-		SN_real y = static_cast<SN_real>(y_);
+	Literal operator()(set_type::real x, set_type::integer y_) {
+		set_type::real y = static_cast<set_type::real>(y_);
 		return x * y;
 	}
 	
-	Literal operator()(SN_real x, Rational y_) {
-		SN_real y = static_cast<SN_real>(y_);
+	Literal operator()(set_type::real x, Rational y_) {
+		set_type::real y = static_cast<set_type::real>(y_);
 		return x * y;
 	}
 	
-	Literal operator()(SN_real x, SN_real y) {
+	Literal operator()(set_type::real x, set_type::real y) {
 		return x * y;
 	}
 };
@@ -245,21 +245,21 @@ Literal OPERATOR_TIMES(Literal l, Literal r) {
 
 struct OPERATOR_SLASH_PACKAGE {
 	Literal operator()(auto, auto) { return Null(); }  // Error
-	Literal operator()(SN_int x, SN_int y) {
+	Literal operator()(set_type::integer x, set_type::integer y) {
 		return Rational{x, y};
 	}
 	
-	Literal operator()(SN_int x_, Rational y) {
+	Literal operator()(set_type::integer x_, Rational y) {
 		Rational x = static_cast<Rational>(x_);
 		return x / y;
 	}
 	
-	Literal operator()(SN_int x_, SN_real y) {
-		SN_real x = static_cast<SN_real>(x_);
+	Literal operator()(set_type::integer x_, set_type::real y) {
+		set_type::real x = static_cast<set_type::real>(x_);
 		return x / y;
 	}
 	
-	Literal operator()(Rational x, SN_int y_) {
+	Literal operator()(Rational x, set_type::integer y_) {
 		Rational y = static_cast<Rational>(y_);
 		return x / y;
 	}
@@ -268,22 +268,22 @@ struct OPERATOR_SLASH_PACKAGE {
 		return x / y;
 	}
 	
-	Literal operator()(Rational x_, SN_real y) {
-		SN_real x = static_cast<SN_real>(x_);
+	Literal operator()(Rational x_, set_type::real y) {
+		set_type::real x = static_cast<set_type::real>(x_);
 		return x / y;
 	}
 	
-	Literal operator()(SN_real x, SN_int y_) {
-		SN_real y = static_cast<SN_real>(y_);
+	Literal operator()(set_type::real x, set_type::integer y_) {
+		set_type::real y = static_cast<set_type::real>(y_);
 		return x / y;
 	}
 	
-	Literal operator()(SN_real x, Rational y_) {
-		SN_real y = static_cast<SN_real>(y_);
+	Literal operator()(set_type::real x, Rational y_) {
+		set_type::real y = static_cast<set_type::real>(y_);
 		return x / y;
 	}
 	
-	Literal operator()(SN_real x, SN_real y) {
+	Literal operator()(set_type::real x, set_type::real y) {
 		return x / y;
 	}
 };

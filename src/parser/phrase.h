@@ -12,12 +12,12 @@
 #include <stack>
 #include <optional>
 
-#include "src/parser/tokens.h"
+#include "src/lexer/tokens.h"
 #include "src/types/types.h"
 
 // TODO(padril): move node into a .h .cpp thing
 struct Node {
-    Token token;
+    lexer::Token token;
     Node* left = nullptr;
     Node* right = nullptr;
 

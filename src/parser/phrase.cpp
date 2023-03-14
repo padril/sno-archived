@@ -4,17 +4,17 @@
 #include "src/operators/operators.h"
 
 
-std::vector<std::set<TokenID>> ORDER_OF_OPERATIONS = {
-    {TokenID::TIMES, TokenID::SLASH},
-    {TokenID::PLUS, TokenID::MINUS},
-    {TokenID::PRINT, TokenID::DEBUG_PRINT},
+std::vector<std::set<lexer::TokenID>> ORDER_OF_OPERATIONS = {
+    {lexer::TokenID::TIMES, lexer::TokenID::SLASH},
+    {lexer::TokenID::PLUS, lexer::TokenID::MINUS},
+    {lexer::TokenID::PRINT, lexer::TokenID::DEBUG_PRINT},
 };
 
 
 void subtree(std::list<Node*>::iterator begin,
     std::list<Node*>::iterator end,
     std::list<Node*>* nodes) {
-    using enum TokenID;
+    using enum lexer::TokenID;
 
     // parens -> tree
     std::stack<std::list<Node*>::iterator> prio;
@@ -67,7 +67,7 @@ void subtree(std::list<Node*>::iterator begin,
 }
 
 Literal subevaluate(Node* head) {
-    using enum TokenID;
+    using enum lexer::TokenID;
     if (head == nullptr) {
         return Null();
     }
@@ -102,12 +102,12 @@ Node* Phrase::tree() {
     for (auto node : nodes) {
         local_nodes.push_back(new Node{node->token});
     }
-    local_nodes.push_front(new Node{ {TokenID::BEGIN_PHRASE, std::nullopt } });
-    local_nodes.push_back(new Node{ {TokenID::END_PHRASE, std::nullopt } });
+    local_nodes.push_front(new Node{ {lexer::TokenID::BEGIN_PHRASE, std::nullopt } });
+    local_nodes.push_back(new Node{ {lexer::TokenID::END_PHRASE, std::nullopt } });
     subtree(local_nodes.begin(), --local_nodes.end(), &local_nodes);
     delete(local_nodes.front()); delete(local_nodes.back());
     local_nodes.pop_front(); local_nodes.pop_back();
-    return local_nodes.size() ? local_nodes.front() : new Node{ { TokenID::EMPTY, std::nullopt } };
+    return local_nodes.size() ? local_nodes.front() : new Node{ { lexer::TokenID::EMPTY, std::nullopt } };
 }
 
 

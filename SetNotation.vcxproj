@@ -130,9 +130,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="base.h" />
-    <ClInclude Include="src\parser\lexer.h" />
-    <ClInclude Include="src\parser\expression.h" />
+    <ClInclude Include="src\lexer\lexeme.h" />
+    <ClInclude Include="src\errors\base.h" />
+    <ClInclude Include="src\lexer\sentence.h" />
     <ClInclude Include="src\operators\operators.h" />
     <ClInclude Include="src\type_definitions.h" />
     <ClInclude Include="src\types\types.h" />
@@ -140,16 +140,16 @@
     <ClInclude Include="src\types\rational.h" />
     <ClInclude Include="src\types\set.h" />
     <ClInclude Include="src\parser\phrase.h" />
-    <ClInclude Include="src\parser\tokens.h" />
+    <ClInclude Include="src\lexer\tokens.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="base.cpp" />
-    <ClCompile Include="src\parser\lexer.cpp" />
+    <ClCompile Include="src\lexer\lexeme.cpp" />
+    <ClCompile Include="src\errors\base.cpp" />
     <ClCompile Include="src\operators\operators.cpp" />
     <ClCompile Include="src\parser\phrase.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\parser\expression.cpp" />
-    <ClCompile Include="src\parser\tokens.cpp" />
+    <ClCompile Include="src\lexer\sentence.cpp" />
+    <ClCompile Include="src\lexer\tokens.cpp" />
     <ClCompile Include="src\types\rational.cpp" />
   </ItemGroup>
   <ItemGroup>
