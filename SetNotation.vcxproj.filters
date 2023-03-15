@@ -18,12 +18,6 @@
     <ClInclude Include="src\types\set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\parser\phrase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\parser\tokens.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\operators\operators.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -39,13 +33,22 @@
     <ClInclude Include="src\type_definitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\parser\expression.h">
+    <ClInclude Include="src\interpreter\lexer\lexeme.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="base.h">
+    <ClInclude Include="src\errors\base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\parser\lexer.h">
+    <ClInclude Include="src\interpreter\lexer\sentence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interpreter\lexer\tokens.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interpreter\parser\tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interface\output\screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,25 +56,28 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\parser\expression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\types\rational.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\parser\phrase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\operators\operators.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\parser\tokens.cpp">
+    <ClCompile Include="src\interpreter\lexer\lexeme.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="base.cpp">
+    <ClCompile Include="src\errors\base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\parser\lexer.cpp">
+    <ClCompile Include="src\interpreter\lexer\sentence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\interpreter\lexer\tokens.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\interpreter\parser\tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\interface\output\screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

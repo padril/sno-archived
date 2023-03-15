@@ -4,7 +4,7 @@
 #include "lexeme.h"
 
 
-namespace lexer {
+namespace sno {
 
 
 // Groups for regex pattern
@@ -52,15 +52,16 @@ std::list<Lexeme> scan(const std::wstring& str) {
     return ret;
 }
 
+static enum literal_type {
+    boolean = 1,
+    integer,
+    rational,
+    real = 6,  // has to skip a few because of submatches in rational
+    string
+};
+
 
 Token evaluate_literal(Lexeme lexeme) {
-    static enum literal_type {
-        boolean = 1,
-        integer,
-        rational,
-        real = 6,  // has to skip a few because of submatches in rational
-        string
-    };
 
     static std::wregex pattern(
         L"(true|false)|"
@@ -79,16 +80,16 @@ Token evaluate_literal(Lexeme lexeme) {
         return Token{ TokenID::LITERAL, match_str == L"true" };
     }
     else if (match[integer] != L"") {
-        return Token{ TokenID::LITERAL, stoi(match_str) };
+        return Token{ TokenID::LITERAL, std::stoi(match_str) };
     }
     else if (match[rational] != L"") {
         size_t slash = match_str.find(L'/');
-        set_type::integer num = stoi(match_str.substr(0, slash));
-        set_type::integer den = stoi(match_str.substr(slash + 1, match_str.size() - slash - 1));
+        integer_type num = stoi(match_str.substr(0, slash));
+        integer_type den = stoi(match_str.substr(slash + 1, match_str.size() - slash - 1));
         return Token{ TokenID::LITERAL, Rational(num, den) };
     }
     else if (match[real] != L"") {
-        return Token{ TokenID::LITERAL, stof(match_str) };
+        return Token{ TokenID::LITERAL, std::stof(match_str) };
     }
     else if (match[string] != L"") {
         return Token{ TokenID::LITERAL, match_str.substr(1, match_str.size() - 2) };
@@ -117,11 +118,11 @@ std::list<Token> evaluate(std::list<Lexeme> lexeme_list) {
     std::list<Token> ret;
 
     for (Lexeme lexeme : lexeme_list) {
-        ret.push_back(lexer::evaluate_lexeme(lexeme));
+        ret.push_back(evaluate_lexeme(lexeme));
     }
 
     return ret;
 }
 
 
-}  // namespace lexer
+}  // namespace sno

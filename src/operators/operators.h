@@ -6,12 +6,12 @@
 
 
 #include <iostream>
-#include "src/lexer/tokens.h"
+#include "src/interpreter/lexer/tokens.h"
 #include "src/types/types.h"
 #include "src/type_definitions.h"
-#include "src/lexer/sentence.h"
-#include "src/parser/phrase.h"
 
+
+namespace sno {
 
 Literal OPERATOR_REPRESENTATION(Literal l, Literal r);
 
@@ -27,5 +27,7 @@ Literal OPERATOR_TIMES(Literal l, Literal r);
 
 Literal OPERATOR_SLASH(Literal l, Literal r);
 
+
+}  // namespace sno
 
 #endif  // SRC_OPERATORS_OPERATORS_H_

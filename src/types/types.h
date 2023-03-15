@@ -13,6 +13,7 @@
 #include "rational.h"
 #include "set.h"
 
+namespace sno {
 
 enum class Type {
     null,
@@ -27,21 +28,23 @@ enum class Type {
 
 
 typedef std::variant<
-    TemplateSet<set_type::integer>,
+    TemplateSet<integer_type>,
     TemplateSet<Rational>,
-    TemplateSet<set_type::real>
+    TemplateSet<real_type>
 > Set;
 
 
 typedef std::variant<
     Null, 
-    set_type::boolean,
-    set_type::integer,
+    boolean_type,
+    integer_type,
     Rational, 
-    set_type::real, 
+    real_type, 
     std::wstring,
     Set
     > Literal;
 
+
+}  // namespace sno
 
 #endif  // SRC_TYPES_LITERAL_H_

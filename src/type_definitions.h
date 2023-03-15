@@ -11,16 +11,16 @@
 // Types used across the entire project.
 
 
-namespace set_type {
+namespace sno {
 
 
-typedef long    integer;
-typedef bool    boolean;
-typedef double  real;
+typedef long     integer_type;
+typedef bool     boolean_type;
+typedef double   real_type;
 
-typedef uint32_t token;
+typedef uint32_t token_type;
 
 
-}
+}  // namespace sno
 
 #endif  // SRC_TYPES_DEFINITONS_H_

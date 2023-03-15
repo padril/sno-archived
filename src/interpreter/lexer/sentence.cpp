@@ -1,10 +1,10 @@
 // Copyright 2023 Leo James Peckham
 
 
-#include "src/lexer/sentence.h"
+#include "src/interpreter/lexer/sentence.h"
 
 
-namespace lexer {
+namespace sno {
 
 // ===
 // Constructors
@@ -25,22 +25,22 @@ Sentence::~Sentence() {}
 // ===
 
 
-Phrase Sentence::parse() {
+Tree* Sentence::parse() {
     if (text.size() == 0) {
         return {};
     }
 
     using enum TokenID;
-    std::list<Node*> nodes;
+    std::list<Tree*> trees;
     std::list<Token> tokens = evaluate(scan(text));
 
     for (Token t : tokens) {
-        Node* node = new Node{t};  // can throw InvalidToken
-        nodes.push_back(node);;
+        Tree* tree = new Tree{t};  // can throw InvalidToken
+        trees.push_back(tree);
     }
 
-    return {nodes};
+    return create_tree(trees);
 }
 
 
-}  // namespace lexer
+}  // namespace sno

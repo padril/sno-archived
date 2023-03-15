@@ -1,20 +1,22 @@
 #include "src/types/rational.h"
 
 
+namespace sno {
+
 // Constructors
-Rational::Rational (set_type::integer p, set_type::integer q /* = 1 */) { set(p, q); }
+Rational::Rational (integer_type p, integer_type q /* = 1 */) { set(p, q); }
 Rational::~Rational() {}
 
 
 // Implicit Conversion
-Rational::operator set_type::integer () const { return num / den; }
-Rational::operator set_type::real() const { return static_cast<set_type::real>(num) / den; }
+Rational::operator integer_type () const { return num / den; }
+Rational::operator real_type() const { return static_cast<real_type>(num) / den; }
 
 
 // Public members
-set_type::integer Rational::numerator()         { return num; }
-set_type::integer Rational::denominator()       { return den; }
-void Rational::set(set_type::integer p, set_type::integer q) {
+integer_type Rational::numerator()         { return num; }
+integer_type Rational::denominator()       { return den; }
+void Rational::set(integer_type p, integer_type q) {
     auto gcd = std::gcd(p, q);
     num = p / gcd;
     den = q / gcd;
@@ -41,3 +43,5 @@ std::wostream& operator<<(std::wostream& out, const Rational& x) {
     out << x.num << '/' << x.den;
     return out;
 }
+
+}  // namespace sno

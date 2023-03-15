@@ -5,7 +5,7 @@
 #define SRC_LEXER_LEXEME_H_
 
 
-#include "src/lexer/tokens.h"
+#include "src/interpreter/lexer/tokens.h"
 #include "src/types/types.h"
 
 #include <list>
@@ -14,7 +14,7 @@
 #include <iostream>
 
 
-namespace lexer {
+namespace sno {
 
 
 enum LexemeID;
@@ -34,6 +34,6 @@ Token evaluate_symbol(Lexeme lex);
 //Token evaluate_identifier(lexeme lex);
 
 
-}  // namespace lexer
+}  // namespace sno
 
 #endif  // SRC_LEXER_LEXEME_H_
