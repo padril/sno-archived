@@ -11,6 +11,8 @@
 #include <algorithm>
 
 
+namespace sno {
+
 // TODO(padril): I have a feeling most of the different Set types could
 //               be an actual use of, and I hate to say this, inheritance.
 template <class T>
@@ -135,7 +137,7 @@ class TemplateSet {
                 // since values is sorted, finding the min of abs(values)
                 // means finding where it changes to positive
                 int min_i = 1;
-                while (static_cast<set_type::real>(values[min_i]) < 0) min_i++;
+                while (static_cast<real_type>(values[min_i]) < 0) min_i++;
                 min_i = -values[min_i - 1] < values[min_i] ? min_i - 1 : min_i;
                 __int64 end_i = end - begin;
                 int l = min_i - 1, r = min_i + 1;
@@ -180,5 +182,7 @@ class TemplateSet {
     }
 };
 
+
+}  // namespace sno
 
 #endif  // SRC_TYPES_SET_H_

@@ -1,16 +1,16 @@
 // Copyright 2023 Leo Peckham
 
 
-#ifndef SRC_PARSER_EXPRESSION_H_
-#define SRC_PARSER_EXPRESSION_H_
+#ifndef SRC_LEXER_SENTENCE_H_
+#define SRC_LEXER_SENTENCE_H_
 
 
-#include "src/parser/phrase.h"
-#include "src/lexer/lexeme.h"
-#include "src/lexer/tokens.h"
+#include "src/interpreter/parser/tree.h"
+#include "src/interpreter/lexer/lexeme.h"
+#include "src/interpreter/lexer/tokens.h"
 
 
-namespace lexer {
+namespace sno {
 
 
 // ===
@@ -33,8 +33,8 @@ public:
     // TODO(padril): implement the following
     // std::wstring to_latex();
     // Literal execute(/*IdentifierList& scope*/);
-
-    Phrase parse();
+    
+    Tree* parse();
 
 private:
 
@@ -43,6 +43,6 @@ private:
 };
 
 
-}  // namespace lexer
+}  // namespace Lexer
 
-#endif  // SRC_EXPRESSION_H_
+#endif  // SRC_SENTENCE_H_
