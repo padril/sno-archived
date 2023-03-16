@@ -7,7 +7,7 @@
 #include <string>
 
 #include "interpreter/parser/tree.h"
-#include "interface/output/screen.h"
+#include "interface/output/tree_display.h"
 
 
 namespace sno {
@@ -19,7 +19,7 @@ namespace sno {
 // Constructors
 // ===
 
-Screen::Screen(const Tree& tree) {
+TreeDisplay::TreeDisplay(const Tree& tree) {
     mid = 0;
     std::wstring repr;
     repr = token_id_to_string(tree.root->id);
@@ -28,7 +28,7 @@ Screen::Screen(const Tree& tree) {
         display = {repr};
         mid = repr.size() / 2;
     } else if (tree.left == nullptr && tree.right != nullptr) {
-        Screen m(*tree.right);
+        TreeDisplay m(*tree.right);
         size_t mh = m.display.size(); size_t mw = m.display[0].size();
         size_t maxw = std::max(repr.size(), mw);
 
@@ -44,8 +44,8 @@ Screen::Screen(const Tree& tree) {
         display = ret;
         mid = maxw - mw;
     } else if (tree.left != nullptr && tree.right != nullptr) {
-        Screen l(*tree.left);
-        Screen r(*tree.right);
+        TreeDisplay l(*tree.left);
+        TreeDisplay r(*tree.right);
         size_t lh = l.display.size(); size_t lw = l.display[0].size();
         size_t rh = r.display.size(); size_t rw = r.display[0].size();
         size_t mh = std::max(lh, rh); size_t mw = std::max(lw, rw);
@@ -93,7 +93,8 @@ Screen::Screen(const Tree& tree) {
 // Member functions
 // ===
 
-void Screen::pad(size_t width, size_t height) {
+
+void TreeDisplay::pad(size_t width, size_t height) {
     size_t w = display[0].size();
     size_t h = display.size();
 
@@ -112,13 +113,12 @@ void Screen::pad(size_t width, size_t height) {
 // Operators
 // ===
 
-std::wostream& operator<<(std::wostream& out, Screen screen) {
-    for (std::wstring_view line : screen.display) {
+std::wostream& operator<<(std::wostream& out, TreeDisplay tree_display) {
+    for (std::wstring_view line : tree_display.display) {
         out << line;
     }
     return out;
 }
-
 
 
 

@@ -130,7 +130,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\interface\output\screen.h" />
+    <ClInclude Include="src\interface\output\output.h" />
+    <ClInclude Include="src\interface\output\tree_display.h" />
     <ClInclude Include="src\interpreter\lexer\lexeme.h" />
     <ClInclude Include="src\errors\base.h" />
     <ClInclude Include="src\interpreter\lexer\sentence.h" />
@@ -144,7 +145,8 @@
     <ClInclude Include="src\interpreter\lexer\tokens.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\interface\output\screen.cpp" />
+    <ClCompile Include="src\interface\output\output.cpp" />
+    <ClCompile Include="src\interface\output\tree_display.cpp" />
     <ClCompile Include="src\interpreter\lexer\lexeme.cpp" />
     <ClCompile Include="src\errors\base.cpp" />
     <ClCompile Include="src\operators\operators.cpp" />

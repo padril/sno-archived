@@ -5,8 +5,10 @@
 #include <io.h>     // Permits us to use
 #include <fcntl.h>  // unicode
 
+#include <iostream>
 #include <string>
 
+#include "interface/output/output.h"
 #include "types/types.h"
 #include "interpreter/lexer/tokens.h"
 #include "interpreter/parser/tree.h"
@@ -15,13 +17,15 @@
 #include "interpreter/lexer/lexeme.h"
 
 
-
-
 int main() {
-    bool debugmode = true;
 
-    (void) _setmode(_fileno(stdout), _O_WTEXT);
-    (void) _setmode(_fileno(stdin), _O_WTEXT);
+    (void)_setmode(_fileno(stdout), _O_WTEXT);
+    (void)_setmode(_fileno(stdin), _O_WTEXT);
+
+
+    sno::TerminalOutput terminal_output = sno::TerminalOutput();
+    sno::Output* output = &terminal_output;
+
 
     std::wstring string = L"";
     while (true) {
@@ -32,13 +36,12 @@ int main() {
         }
         sno::Sentence s(string);
         sno::Tree* p = s.parse();
-        if (debugmode) {
-            std::wcout << *p;
-        }
+        auto res = p->execute();
         if (p->root->id != sno::string_to_token_id(L"$")) {
-            sno::OPERATOR_REPRESENTATION(sno::Null(), p->execute());
-        } else {
-            p->execute();
+            output->display(
+                sno::DisplayOption::cont,
+                &res,
+                sno::ResultType::literal);
         }
     }
 }
