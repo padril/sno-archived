@@ -3,6 +3,7 @@
 
 #include "src\operators\operators.h"
 
+
 namespace sno {
 
 
@@ -279,4 +280,5 @@ Literal OPERATOR_SLASH(Literal l, Literal r) {
 	return std::visit(OPERATOR_SLASH_PACKAGE(), l, r);
 }
 
-}
+
+}  // namespace sno

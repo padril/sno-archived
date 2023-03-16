@@ -13,11 +13,10 @@
 
 namespace sno {
 
+
 Literal OPERATOR_REPRESENTATION(Literal l, Literal r);
 
 Literal OPERATOR_PRINT(Literal l, Literal r);
-
-Literal OPERATOR_DEBUG_PRINT(Literal l, Literal r);
 
 Literal OPERATOR_PLUS(Literal l, Literal r);
 

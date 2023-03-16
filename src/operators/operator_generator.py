@@ -85,18 +85,18 @@ DEFAULT_INPUT_FILENAME = DEFAULT_OUTPUT_FILENAME = 'operators'
 DEFAULT_INPUT_EXTENSION = '.txt'
 DEFAULT_RELATIVE_WORKING_PATH = os.path.relpath(os.path.dirname(__file__))
 
+NAMESPACE = 'sno'
+
 INCLUDES = [
     '<iostream>',
-    '"src/parser/tokens.h"',
+    '"src/interpreter/lexer/tokens.h"',
     '"src/types/types.h"',
     '"src/type_definitions.h"',
-    '"src/parser/expression.h"',
-    '"src/parser/phrase.h"'
     ]
 
 TYPES = {
     'null': ['Null'],
-    'bool': ['SN_bool'],
+    'bool': ['boolean_type'],
     'int': ['integer_type'],
     'rational': ['Rational'],
     'real': ['real_type'],
@@ -108,6 +108,7 @@ TYPES = {
     }
 
 PROMOTE_ORDER = (
+    'boolean_type',
     'integer_type',
     'Rational',
     'real_type',
@@ -290,13 +291,16 @@ C++ CODE GENERATION
 def generate_copyright() -> List[str]:
     return ['// Copyright 2023 Leo Peckham']
 
- 
-def generate_header_guard(path: str) -> Tuple[List[str], List[str]]:
+
+def generate_header_guard(path: str) -> Tuple[str, str]:
     header_path = re.sub(r'[\\.]', '_', path + '_').upper()
     return [f'#ifndef {header_path}',
-            f'#define {header_path}'],\
+            f'#define {header_path}',],\
            [f'#endif  // {header_path}']
 
+def generate_namespace() -> Tuple[List[str], List[str]]:
+    return [f'namespace {NAMESPACE} {{'],\
+           [f'}}  // namespace {NAMESPACE}']
 
 def normalize_types(functions: List[FunctionInfo]) -> List[FunctionInfo]:
     id_expanded: Dict[Tuple[str, str], int] = {}
@@ -377,16 +381,20 @@ def generate_operator(name: str) -> List[str]:
 
 def generate_cpp_file(packages: Dict[str, List[PackageInfo]],
                   h_path: str) -> List[str]:
+    start_namespace, end_namespace = generate_namespace()
     cpp_packages = sum([generate_package(k, v) + \
                         ['', ''] 
                         for k, v in packages.items()], [])
     return generate_copyright() + ['', ''] + \
            [f'#include "{h_path}"', '', ''] + \
-           cpp_packages
+           start_namespace + ['', ''] + \
+           cpp_packages + \
+           end_namespace + ['']
 
 def generate_h_file(packages: Dict[str, List[PackageInfo]],
                     h_path: str) -> List[str]:
     start_guard, end_guard = generate_header_guard(h_path)
+    start_namespace, end_namespace = generate_namespace()
     function_defs: List[str] = []
     for name in packages.keys():
         function_defs += [f'Literal OPERATOR_{name}(Literal l, Literal r);']
@@ -394,7 +402,9 @@ def generate_h_file(packages: Dict[str, List[PackageInfo]],
     return generate_copyright() + ['', ''] + \
            start_guard + ['', ''] + \
            generate_includes() + ['', ''] + \
+           start_namespace + ['', ''] + \
            function_defs + [''] + \
+           end_namespace + [''] + \
            end_guard + ['']
 
 
