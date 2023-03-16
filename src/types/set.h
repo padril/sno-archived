@@ -1,17 +1,22 @@
+
 // Copyright 2023 Leo James Peckahm
 
-#ifndef SRC_TYPES_SET_H_
-#define SRC_TYPES_SET_H_
 
+#ifndef SNO_SRC_TYPES_SET_H_
+#define SNO_SRC_TYPES_SET_H_
 
-#include "src/type_definitions.h"
 
 #include <iostream>
 #include <deque>
 #include <algorithm>
 
+#include "types/type_definitions.h"
+
 
 namespace sno {
+
+
+
 
 // TODO(padril): I have a feeling most of the different Set types could
 //               be an actual use of, and I hate to say this, inheritance.
@@ -90,7 +95,8 @@ class TemplateSet {
         return *this;
     }
 
-    friend std::wostream& operator<<(std::wostream& os, const TemplateSet<T>& S) {
+    friend std::wostream& operator<<(
+        std::wostream& os, const TemplateSet<T>& S) {
         auto truncated = truncate(S.elements, MAX_DISPLAY, DISPLAY_AROUND_ZERO);
         os << '{';
         if (truncated.on_left) os << "...";
@@ -183,6 +189,9 @@ class TemplateSet {
 };
 
 
+
+
 }  // namespace sno
 
-#endif  // SRC_TYPES_SET_H_
+
+#endif  // SNO_SRC_TYPES_SET_H_

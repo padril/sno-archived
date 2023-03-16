@@ -106,7 +106,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,7 +136,7 @@
     <ClInclude Include="src\interpreter\lexer\sentence.h" />
     <ClInclude Include="src\operators\operators.h" />
     <ClInclude Include="src\interpreter\parser\tree.h" />
-    <ClInclude Include="src\type_definitions.h" />
+    <ClInclude Include="src\types\type_definitions.h" />
     <ClInclude Include="src\types\types.h" />
     <ClInclude Include="src\types\nulltype.h" />
     <ClInclude Include="src\types\rational.h" />

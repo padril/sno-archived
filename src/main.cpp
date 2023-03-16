@@ -1,16 +1,25 @@
-﻿// Copyright 2023 Leo James Peckham
+﻿
+// Copyright 2023 Leo James Peckham
 
-#include "src/operators/operators.h"
-#include "src/interpreter/lexer/sentence.h"
-#include "src/interpreter/lexer/lexeme.h"
 
 #include <io.h>     // Permits us to use
 #include <fcntl.h>  // unicode
 
-int main() {
+#include <string>
 
+#include "types/types.h"
+#include "interpreter/lexer/tokens.h"
+#include "interpreter/parser/tree.h"
+#include "operators/operators.h"
+#include "interpreter/lexer/sentence.h"
+#include "interpreter/lexer/lexeme.h"
+
+
+
+
+int main() {
     bool debugmode = true;
-    
+
     (void) _setmode(_fileno(stdout), _O_WTEXT);
     (void) _setmode(_fileno(stdin), _O_WTEXT);
 
@@ -26,14 +35,10 @@ int main() {
         if (debugmode) {
             std::wcout << *p;
         }
-        if (p->root->id != sno::string_to_token_id(L"$") ) {
-            sno::OPERATOR_REPRESENTATION(sno::Null(), p->evaluate());
-        }
-        else {
-            p->evaluate();
+        if (p->root->id != sno::string_to_token_id(L"$")) {
+            sno::OPERATOR_REPRESENTATION(sno::Null(), p->execute());
+        } else {
+            p->execute();
         }
     }
-
-    //Phrase p = Sentence::parse(L"4 / (3) + 2");
-    //std::wcout << p.tree();
 }

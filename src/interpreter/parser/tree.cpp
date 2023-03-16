@@ -1,29 +1,38 @@
+
 // Copyright 2023 Leo Peckham
 
-#include "src/interpreter/parser/tree.h"
+
+#include "interpreter/parser/tree.h"
+
+#include <vector>
+#include <optional>
+#include <set>
+#include <stack>
+#include <list>
+
+#include "interpreter/lexer/tokens.h"
+#include "types/types.h"
+#include "interpreter/lexer/tokens.h"
+#include "operators/operators.h"
 
 
 namespace sno {
 
-size_t Tree::size() {
-    int count = 1;
-    if (left != nullptr) {
-        count += left->size();
-    }
-    if (right != nullptr) {
-        count += right->size();
-    }
-    return count;
-}
+
+
+
+// ===
+// Local
+// ===
 
 
 void subtree(std::list<Tree*>::iterator begin,
              std::list<Tree*>::iterator end,
              std::list<Tree*>* trees) {
-    static std::vector<std::set<sno::TokenID>> ORDER_OF_OPERATIONS = {
-        {sno::TokenID::TIMES, sno::TokenID::SLASH},
-        {sno::TokenID::PLUS, sno::TokenID::MINUS},
-        {sno::TokenID::PRINT, sno::TokenID::DEBUG_PRINT},
+    static std::vector<std::set<TokenID>> ORDER_OF_OPERATIONS = {
+        {TokenID::TIMES, TokenID::SLASH},
+        {TokenID::PLUS,  TokenID::MINUS},
+        {TokenID::PRINT, TokenID::DEBUG_PRINT},
     };
     using enum sno::TokenID;
 
@@ -32,8 +41,7 @@ void subtree(std::list<Tree*>::iterator begin,
     for (auto i = std::next(begin); i != end; ++i) {
         if ((*i)->root->id == BEGIN_PRIORITY) {
             prio.push(i);
-        }
-        else if ((*i)->root->id == END_PRIORITY) {
+        } else if ((*i)->root->id == END_PRIORITY) {
             auto begin_prio = prio.top();
             auto end_prio = i;
             // TODO(padril): there's definitely a better way to do that
@@ -80,10 +88,56 @@ void subtree(std::list<Tree*>::iterator begin,
 }
 
 
-Literal Tree::evaluate() {
-    using enum sno::TokenID;
-    Literal lval = left != nullptr ? left->evaluate() : Null();
-    Literal rval = right != nullptr ? right->evaluate() : Null();
+
+
+// ===
+// Functions
+// ===
+
+
+Tree* create_tree(std::list<Tree*> trees) {
+    std::list<Tree*> local_trees;
+    for (auto tree : trees) {
+        local_trees.push_back(new Tree{ tree->root });
+    }
+    local_trees.push_front(new Tree{
+        sno::Token{ sno::TokenID::BEGIN_PHRASE, std::nullopt }
+        });
+    local_trees.push_back(new Tree{
+        sno::Token{ sno::TokenID::END_PHRASE, std::nullopt }
+        });
+    subtree(local_trees.begin(), --local_trees.end(), &local_trees);
+    delete(local_trees.front()); delete(local_trees.back());
+    local_trees.pop_front(); local_trees.pop_back();
+    return local_trees.size() ?
+        local_trees.front() :
+        new Tree{ sno::Token{ sno::TokenID::EMPTY, std::nullopt } };
+}
+
+
+
+
+// ===
+// Members
+// ===
+
+
+size_t Tree::size() {
+    size_t count = 1;
+    if (left != nullptr) {
+        count += left->size();
+    }
+    if (right != nullptr) {
+        count += right->size();
+    }
+    return count;
+}
+
+
+Literal Tree::execute() {
+    using enum TokenID;
+    Literal lval = left != nullptr ? left->execute() : Null();
+    Literal rval = right != nullptr ? right->execute() : Null();
 
     switch (root->id) {
     case LITERAL:
@@ -98,26 +152,24 @@ Literal Tree::evaluate() {
         return OPERATOR_SLASH(lval, rval);
     case PRINT:
         return OPERATOR_PRINT(lval, rval);
+    default:
+        return Null();  // token is unimplemented
     }
 }
 
-Tree* create_tree(std::list<Tree*> trees) {
-    std::list<Tree*> local_trees;
-    for (auto tree : trees) {
-        local_trees.push_back(new Tree{ tree->root });
-    }
-    local_trees.push_front(new Tree{ sno::Token{ sno::TokenID::BEGIN_PHRASE, std::nullopt } });
-    local_trees.push_back(new Tree{ sno::Token{ sno::TokenID::END_PHRASE, std::nullopt } });
-    subtree(local_trees.begin(), --local_trees.end(), &local_trees);
-    delete(local_trees.front()); delete(local_trees.back());
-    local_trees.pop_front(); local_trees.pop_back();
-    return local_trees.size() ? local_trees.front() : new Tree{ sno::Token{ sno::TokenID::EMPTY, std::nullopt } };
-}
 
-std::wostream& operator<<(std::wostream& out, Tree tree)
-{
-    // TODO: insert return statement here
+
+
+// ===
+// Operators
+// ===
+
+
+std::wostream& operator<<(std::wostream& out, Tree tree) {
     return out;
 }
+
+
+
 
 }  // namespace sno

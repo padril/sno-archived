@@ -1,22 +1,25 @@
+
 // Copyright 2023 Leo Peckham
+
 
 #ifndef SRC_TYPES_RATIONAL_H_
 #define SRC_TYPES_RATIONAL_H_
 
-#include <compare>
 
-#include <numeric>
 #include <iostream>
 
-#include "src/type_definitions.h"
+#include "types/type_definitions.h"
+
 
 namespace sno {
+
+
+
 
 class Rational {
  public:
     // Constructors
-    // TODO(padril): declare explicit and do conversions in operator_generator
-    Rational(integer_type p = 0, integer_type q = 1);
+    explicit Rational(integer_type p = 0, integer_type q = 1);
     ~Rational();
 
 
@@ -52,6 +55,10 @@ class Rational {
     integer_type den;
 };
 
+
+
+
 }  // namespace sno
 
-#endif  // SRC_TYPES_RATIONAL_H_
+
+#endif  // SNO_SRC_TYPES_RATIONAL_H_

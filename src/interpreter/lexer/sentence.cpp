@@ -1,10 +1,20 @@
+
 // Copyright 2023 Leo James Peckham
 
 
-#include "src/interpreter/lexer/sentence.h"
+#include "interpreter/lexer/sentence.h"
+
+#include <list>
+
+#include "interpreter/parser/tree.h"
+#include "interpreter/lexer/lexeme.h"
+#include "interpreter/lexer/tokens.h"
 
 
 namespace sno {
+
+
+
 
 // ===
 // Constructors
@@ -18,6 +28,8 @@ Sentence::Sentence(const std::wstring& str) {
 
 
 Sentence::~Sentence() {}
+
+
 
 
 // ===
@@ -41,6 +53,8 @@ Tree* Sentence::parse() {
 
     return create_tree(trees);
 }
+
+
 
 
 }  // namespace sno
