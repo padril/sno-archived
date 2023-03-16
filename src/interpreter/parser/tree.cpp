@@ -56,6 +56,7 @@ void subtree(std::list<Tree*>::iterator begin,
         for (auto i = std::next(begin); i != end; ++i) {
             if (operations.contains((*i)->root->id)) {
                 auto j = i;
+                ++j;
                 while ((*j)->root->id != LITERAL && (*j)->right == nullptr) {
                     ++j;
                 }

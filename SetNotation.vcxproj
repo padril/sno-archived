@@ -24,7 +24,7 @@
     <ProjectGuid>{500ada3a-97fd-4a77-aeeb-1dc9efc45a64}</ProjectGuid>
     <RootNamespace>SetNotation</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>SetNotation</ProjectName>
+    <ProjectName>sno</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
