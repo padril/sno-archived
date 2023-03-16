@@ -1,33 +1,35 @@
+
 // Copyright 2023 Leo Peckham
 
 
-#ifndef SRC_LEXER_TOKENS_H_
-#define SRC_LEXER_TOKENS_H_
+#ifndef SNO_SRC_LEXER_TOKENS_H_
+#define SNO_SRC_LEXER_TOKENS_H_
 
-
-#include "src/types/types.h"
-#include "src/type_definitions.h"
 
 #include <string>
-#include <variant>
-#include <numeric>
 #include <optional>
+
+#include "types/types.h"
+#include "types/type_definitions.h"
 
 
 namespace sno {
 
-enum class TokenID : token_type {
-    BEGIN_PHRASE = 'B',
-    END_PHRASE = 'E',
-    EMPTY = 'X',
 
+
+
+enum class TokenID : token_type {
+    INVALID_TOKEN = 'IT',
+
+    BEGIN_PHRASE = 'BP',
+    END_PHRASE = 'EP',
+    EMPTY = 'EM',
 
     BEGIN_PRIORITY = '(',
     END_PRIORITY = ')',
     BEGIN_SET = '{',
     END_SET = '}',
 
-    STRING = 'S',
     LITERAL = 'L',
 
     SYMBOL,
@@ -39,15 +41,17 @@ enum class TokenID : token_type {
     DEBUG_PRINT = ';$',
 };
 
+std::wstring token_id_to_string(TokenID token);
+TokenID string_to_token_id(std::wstring string);
+
 struct Token {
     TokenID id;
     std::optional<Literal> value;
 };
 
-std::wstring token_id_to_string(TokenID token);
-TokenID string_to_token_id(std::wstring string);
+
 
 
 }  // namespace sno
 
-#endif // SRC_TOKENS_H_
+#endif  // SNO_SRC_LEXER_TOKENS_H_

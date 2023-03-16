@@ -89,9 +89,9 @@ NAMESPACE = 'sno'
 
 INCLUDES = [
     '<iostream>',
-    '"src/interpreter/lexer/tokens.h"',
-    '"src/types/types.h"',
-    '"src/type_definitions.h"',
+    '"interpreter/lexer/tokens.h"',
+    '"types/types.h"',
+    '"types/type_definitions.h"',
     ]
 
 TYPES = {
@@ -294,9 +294,9 @@ def generate_copyright() -> List[str]:
 
 def generate_header_guard(path: str) -> Tuple[str, str]:
     header_path = re.sub(r'[\\.]', '_', path + '_').upper()
-    return [f'#ifndef {header_path}',
-            f'#define {header_path}',],\
-           [f'#endif  // {header_path}']
+    return [f'#ifndef SNO_{header_path}',
+            f'#define SNO_{header_path}',],\
+           [f'#endif  // SNO_{header_path}']
 
 def generate_namespace() -> Tuple[List[str], List[str]]:
     return [f'namespace {NAMESPACE} {{'],\
@@ -385,10 +385,12 @@ def generate_cpp_file(packages: Dict[str, List[PackageInfo]],
     cpp_packages = sum([generate_package(k, v) + \
                         ['', ''] 
                         for k, v in packages.items()], [])
+    proper_h_path = '/'.join(h_path.split('\\')[1:])
     return generate_copyright() + ['', ''] + \
-           [f'#include "{h_path}"', '', ''] + \
-           start_namespace + ['', ''] + \
-           cpp_packages + \
+           [f'#include "{proper_h_path}"', '', ''] + \
+           generate_includes() + ['', ''] + \
+           start_namespace + ['', '', '', ''] + \
+           cpp_packages + ['', ''] + \
            end_namespace + ['']
 
 def generate_h_file(packages: Dict[str, List[PackageInfo]],
@@ -401,9 +403,9 @@ def generate_h_file(packages: Dict[str, List[PackageInfo]],
         function_defs += ['']
     return generate_copyright() + ['', ''] + \
            start_guard + ['', ''] + \
-           generate_includes() + ['', ''] + \
-           start_namespace + ['', ''] + \
-           function_defs + [''] + \
+           ['#include "types/types.h"', '', ''] + \
+           start_namespace + ['', '', '', ''] + \
+           function_defs + ['', '', ''] + \
            end_namespace + [''] + \
            end_guard + ['']
 

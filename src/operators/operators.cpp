@@ -1,10 +1,18 @@
 // Copyright 2023 Leo Peckham
 
 
-#include "src\operators\operators.h"
+#include "operators/operators.h"
+
+
+#include <iostream>
+#include "interpreter/lexer/tokens.h"
+#include "types/types.h"
+#include "types/type_definitions.h"
 
 
 namespace sno {
+
+
 
 
 struct OPERATOR_REPRESENTATION_PACKAGE {
@@ -279,6 +287,8 @@ struct OPERATOR_SLASH_PACKAGE {
 Literal OPERATOR_SLASH(Literal l, Literal r) {
 	return std::visit(OPERATOR_SLASH_PACKAGE(), l, r);
 }
+
+
 
 
 }  // namespace sno

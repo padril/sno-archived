@@ -1,26 +1,33 @@
+
 // Copyright 2023 Leo Peckham
 
-#ifndef SRC_INTERPRETER_TREE_H_
-#define SRC_INTERPRETER_TREE_H_
 
-#include "src/interpreter/lexer/tokens.h"
-#include "src/operators/operators.h"
-#include <vector>
+#ifndef SNO_SRC_INTERPRETER_PARSER_TREE_H_
+#define SNO_SRC_INTERPRETER_PARSER_TREE_H_
+
+
+#include <iostream>
 #include <optional>
-#include <set>
-#include <stack>
 #include <list>
+
+#include "types/types.h"
+#include "interpreter/parser/tree.h"
+#include "interpreter/lexer/tokens.h"
+
 
 namespace sno {
 
+
+
+
 struct Tree {
-    std::optional<sno::Token> root;
+    std::optional<Token> root;
     Tree* left = nullptr;
     Tree* right = nullptr;
 
     size_t size();
 
-    sno::Literal evaluate();
+    Literal execute();
 
     friend std::wostream& operator<<(std::wostream& out, Tree tree);
     // TODO(padril): a descructor that calls child destructors
@@ -28,6 +35,10 @@ struct Tree {
 
 Tree* create_tree(std::list<Tree*> trees);
 
-}
 
-#endif  // SRC_INTERPRETER_TREE_H_
+
+
+}  // namespace sno
+
+
+#endif  // SNO_SRC_INTERPRETER_PARSER_TREE_H_

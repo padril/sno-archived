@@ -1,19 +1,24 @@
+
 // Copyright 2023 Leo Peckham
 
 
-#ifndef SRC_TYPES_LITERAL_H_
-#define SRC_TYPES_LITERAL_H_
+#ifndef SNO_SRC_TYPES_LITERAL_H_
+#define SNO_SRC_TYPES_LITERAL_H_
 
 
 #include <variant>
 #include <string>
 
-#include "src/type_definitions.h"
-#include "nulltype.h"
-#include "rational.h"
-#include "set.h"
+#include "types/type_definitions.h"
+#include "types/nulltype.h"
+#include "types/rational.h"
+#include "types/set.h"
+
 
 namespace sno {
+
+
+
 
 enum class Type {
     null,
@@ -35,16 +40,19 @@ typedef std::variant<
 
 
 typedef std::variant<
-    Null, 
+    Null,
     boolean_type,
     integer_type,
-    Rational, 
-    real_type, 
+    Rational,
+    real_type,
     std::wstring,
     Set
     > Literal;
 
 
+
+
 }  // namespace sno
 
-#endif  // SRC_TYPES_LITERAL_H_
+
+#endif  // SNO_SRC_TYPES_LITERAL_H_

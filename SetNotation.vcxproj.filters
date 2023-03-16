@@ -30,7 +30,7 @@
     <ClInclude Include="src\types\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\type_definitions.h">
+    <ClInclude Include="src\types\type_definitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\interpreter\lexer\lexeme.h">
