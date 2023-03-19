@@ -47,7 +47,7 @@ typedef std::variant<
     real_type,
     std::wstring,
     Set
-    > Literal;
+> Literal;
 
 
 

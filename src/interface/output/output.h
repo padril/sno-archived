@@ -10,7 +10,7 @@
 #include <variant>
 
 #include "types/types.h"
-#include "errors/base.h"
+#include "errors/base_error.h"
 
 
 namespace sno {

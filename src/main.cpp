@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 
+#include "errors/base_error.h"
 #include "interface/output/output.h"
 #include "types/types.h"
 #include "interpreter/lexer/tokens.h"
@@ -35,13 +36,20 @@ int main() {
             break;
         }
         sno::Sentence s(string);
-        sno::Tree* p = s.parse();
-        auto res = p->execute();
-        if (p->root->id != sno::string_to_token_id(L"$")) {
-            output->display(
-                sno::DisplayOption::cont,
-                &res,
-                sno::ResultType::literal);
+        sno::Tree* p = nullptr;
+        sno::Literal res;
+        try {
+            p = s.parse();
+            res = p->execute();
+            if (p->root->id != sno::string_to_token_id(L"$")) {
+                output->display(
+                    sno::DisplayOption::cont,
+                    &res,
+                    sno::ResultType::literal);
+            }
+        }
+        catch (sno::BaseError* e){
+            e->display();
         }
     }
 }

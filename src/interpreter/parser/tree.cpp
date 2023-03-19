@@ -10,6 +10,7 @@
 #include <stack>
 #include <list>
 
+#include "errors/base_error.h"
 #include "interpreter/lexer/tokens.h"
 #include "types/types.h"
 #include "interpreter/lexer/tokens.h"
@@ -153,7 +154,8 @@ Literal Tree::execute() {
     case PRINT:
         return OPERATOR_PRINT(lval, rval);
     default:
-        return Null();  // token is unimplemented
+        return Null();
+        // token is unimplemented
     }
 }
 

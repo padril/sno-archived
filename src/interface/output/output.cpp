@@ -20,16 +20,10 @@ void TerminalOutput::display(
     DisplayOption option,
     void* result,
     ResultType type) {
-    Error* error = nullptr;
+    BaseError* error = nullptr;
     Literal* lit = nullptr;
     switch (type) {
     case ResultType::error:
-        error = reinterpret_cast<Error*>(result);
-        std::wcout
-            << L"Error #" << static_cast<int>(error->id)
-            << L" at line (" << error->line
-            << L"):" << std::endl
-            << L"\t" << error->message << std::endl;
         break;
     case ResultType::literal:
         lit = reinterpret_cast<Literal*>(result);

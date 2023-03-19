@@ -10,6 +10,8 @@
 #include <iostream>
 
 #include "interpreter/lexer/tokens.h"
+#include "errors/invalid_token_error.h"
+#include "errors/base_error.h"
 #include "types/types.h"
 
 
@@ -40,9 +42,11 @@ enum literal_type {
 
 
 enum LexemeID {  // Groups for regex pattern
-    literal     = 1,
-    symbol      = 4,
-    identifier  = 5,
+    whitespace  = 1,
+    literal     = 2,
+    symbol      = 5,
+    identifier  = 6,
+    error       = 7
 };
 
 
@@ -55,7 +59,7 @@ enum LexemeID {  // Groups for regex pattern
 
 std::list<Lexeme> scan(const std::wstring& str) {
     static std::wregex pattern(
-        L"("
+        L"^([ \t\n]+)|("
         "true|false|"
         "[0-9]+|"
         "[0-9]+(\\.0+)?/[0-9]+(\\.0+)?|"
@@ -63,7 +67,8 @@ std::list<Lexeme> scan(const std::wstring& str) {
         "\"[^\"]*\""
         ")|"
         "([,(){}]|\\+|-|\\*|/|\\$|;\\$)|"
-        "([a-zA-Z][a-zA-Z0-9]*)",
+        "([a-zA-Z][a-zA-Z0-9]*)|"
+        "(.)",
         std::regex_constants::extended);
 
     std::wstring str_copy = str;
@@ -71,14 +76,16 @@ std::list<Lexeme> scan(const std::wstring& str) {
     std::wsmatch match;
 
     while (std::regex_search(str_copy, match, pattern)) {
-        if (match[literal] != L"") {
+        if (match[whitespace] != L"") {
+            // purposefully do nothing
+        } else if (match[literal] != L"") {
             ret.push_back({ literal, match.str(literal) });
         } else if (match[symbol] != L"") {
             ret.push_back({ symbol, match.str(symbol) });
         } else if (match[identifier] != L"") {
             ret.push_back({ identifier, match.str(identifier) });
         } else {
-            std::wcout << "ERROR: Improper match" << std::endl;
+            throw new InvalidTokenError(0, match.str(error));
         }
         str_copy = match.suffix();
     }

@@ -36,7 +36,7 @@
     <ClInclude Include="src\interpreter\lexer\lexeme.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\errors\base.h">
+    <ClInclude Include="src\errors\base_error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\interpreter\lexer\sentence.h">
@@ -54,6 +54,9 @@
     <ClInclude Include="src\interface\output\output.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\errors\invalid_token_error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -68,7 +71,7 @@
     <ClCompile Include="src\interpreter\lexer\lexeme.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\errors\base.cpp">
+    <ClCompile Include="src\errors\base_error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\interpreter\lexer\sentence.cpp">
@@ -84,6 +87,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\interface\output\output.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\errors\invalid_token_error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
