@@ -57,6 +57,9 @@
     <ClInclude Include="src\errors\invalid_token_error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\errors\invalid_arity_error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -90,6 +93,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\errors\invalid_token_error.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\errors\invalid_arity_error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\errors\invalid_arity_error.h" />
     <ClInclude Include="src\errors\invalid_token_error.h" />
     <ClInclude Include="src\interface\output\output.h" />
     <ClInclude Include="src\interface\output\tree_display.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="src\interpreter\lexer\tokens.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\errors\invalid_arity_error.cpp" />
     <ClCompile Include="src\errors\invalid_token_error.cpp" />
     <ClCompile Include="src\interface\output\output.cpp" />
     <ClCompile Include="src\interface\output\tree_display.cpp" />

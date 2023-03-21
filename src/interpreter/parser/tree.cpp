@@ -11,6 +11,7 @@
 #include <list>
 
 #include "errors/base_error.h"
+#include "errors/invalid_arity_error.h"
 #include "interpreter/lexer/tokens.h"
 #include "types/types.h"
 #include "interpreter/lexer/tokens.h"
@@ -152,6 +153,9 @@ Literal Tree::execute() {
     case SLASH:
         return OPERATOR_SLASH(lval, rval);
     case PRINT:
+        if (!std::holds_alternative<Null>(lval)) {
+            throw new InvalidArityError(0, L"Invalid dyadic usage of `$` operator");
+        }
         return OPERATOR_PRINT(lval, rval);
     default:
         return Null();
