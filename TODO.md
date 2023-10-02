@@ -1,11 +1,21 @@
 # TODO:
 
 ---
+## Planning
+A UML diagram should be created outlining percise functionality of the program
+using Clean Architecture and SOLID.
+
+---
 ## Error Handling
 This one is really important
 
 ---
+## Testing
+
+
+---
 ## Types
+
 - [ ] Administrative
 	- [x] Null
 	- [ ] Identifier
@@ -36,10 +46,18 @@ This one is really important
 	- [ ] Multiset
 		- [ ] Sequence
 		- [ ] Function
+
+---
+## Functions
+
 - [ ] Function
 	- [ ] Derivatives
 	- [ ] Integrals
 - [ ] Operations
+
+---
+## Tools
+
 - [ ] Interpreter
 	- [x] input stream
 		- [x] Figure out notation
@@ -51,6 +69,7 @@ This one is really important
 			- [ ] i want to be able to graph the mandlebrot set in less than 50 characters
 				``M := {c @ `C : |z_N| < N, z_(i+1) := z_i^2 + c, z_0 := 0}, N -> `inf ``
 	- [ ] IDE
+
 ---
 ## Example phrases
 ```a
@@ -83,9 +102,10 @@ False	(Note: It would show a probability
 | :x:					| Variant				| ;		| 2 ; 1 = 2		| True		|
 | :x:					| Set default variant	| =;	| =; 0.1		|			|
 | :x:					| Default variant		| ;		| 1 ;= 2		| False		|
-| :x:					| Over/Between (axis)	| _		| 0_+[1 2 3]	| []		|
-| :x:					| Set default over		| =_	| =_ 0			|			|
-| :x:					| Default over			| _		| _+[1 2 3]		|			|
+| :x:					| Fold/Between (axis)	| %		| 1%+[1 2 3]	| [6]		|
+| :x:					| Set default fold		| =%	| =% 1			|			|
+| :x:					| Default fold			| % 	| %+[1 2 3]		| [1 2 3]	|
+| :x:					| Each (Disable rank polymorphism)| _ | [1 2]_+[3 4] | [[4 5][5 6]] |
 |						| **DATA**				|		|				|			|
 | :heavy_check_mark:	| Rational				| /		| 1/2			|			|
 | :heavy_check_mark:	| Decimal				| .		| 1.3			|			|
@@ -114,10 +134,10 @@ False	(Note: It would show a probability
 | :x:					| Length			    | #		| #[1 2 3]		| 3			|
 | :x:					| ; Cardinality			| ;#	| ;#{1,2,3,...}	| 1			|
 | :x:					| Reshape				| #		| 2 2#[1 2 3 4] | [[1 2][3 4]]|
+| :x:					| Unravel				| ,,	| ,,[[1 2][3 4]]| 1 2 3 4	|
 | :heavy_check_mark:	| Slash					| /		| 1 / 2.5		| 0.4		|
 | :x:					| ; Integer division	| ;/	| 6 / 2.5		| 2			|	
-| :x:					| Modulus				| %		| 7 % 3			| 1			|
-| :x:					| ; Remainder division	| ;%	| 7 ;% 3		| 2 1		|
+| :x:					| Modulus				| `mod	| 7 `mod 3		| 1			|
 | :x:					| Absolute				| \|	| \|-5			| 5			|
 | :x:					| ; Signum				| ;\|	| ;\|-5			| -1		|
 | :x:					| Union					| \|	| {3,4} \| {1,3}| {3}		|
